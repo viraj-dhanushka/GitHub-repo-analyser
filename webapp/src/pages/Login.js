@@ -1,4 +1,6 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable react/no-unknown-property */ 
+
 import React from 'react';
 import { useAuthContext } from '@asgardeo/auth-react';
 import { styled, createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
