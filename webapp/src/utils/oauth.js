@@ -1,8 +1,14 @@
 /* eslint-disable prettier/prettier */
 
+const OAUTH_CONFIG = {
+  SKIP_TOKEN_EXCHANGE: false,
+  BEARER_TOKEN: process.env.REACT_APP_CHOREO_TOKEN,
+  TOKEN_APIS: {
+    MSAL_TOKEN_EXCHANGE: process.env.REACT_APP_MSAL_TOKEN_EXCHANGE_URL,
+    MSAL_TOKEN_EXCHANGE_AUTH_HEADER: process.env.REACT_APP_MSAL_TOKEN_EXCHANGE_AUTH_HEADER
+  }
+};
 
-
-import { OAUTH_CONFIG } from '../Config';
 
 let idToken = null;
 let refreshTokenFunction = null;

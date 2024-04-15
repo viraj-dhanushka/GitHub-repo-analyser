@@ -86,7 +86,8 @@ export default function Login() {
                     </Typography>
 
                     <Typography sx={{ color: 'text.secondary' }}>
-                      Click the login button below.
+                      Click the login button below. 
+                      {window.config.todoApiUrl}
                     </Typography>
                   </ThemeProvider>
                 </Stack>
