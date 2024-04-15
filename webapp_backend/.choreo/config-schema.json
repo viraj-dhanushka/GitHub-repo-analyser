@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "wso21234": {
+      "type": "object",
+      "properties": {
+        "securitystatusmonitoringtool": {
+          "type": "object",
+          "properties": {
+            "COSMOS_DB_BASE_URL": {
+              "type": "string",
+              "description": ""
+            },
+            "PRIMARY_KEY": {
+              "type": "string",
+              "description": ""
+            },
+            "GITHUB_TOKEN": {
+              "type": "string",
+              "description": ""
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "COSMOS_DB_BASE_URL",
+            "PRIMARY_KEY",
+            "GITHUB_TOKEN"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
