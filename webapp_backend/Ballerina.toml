@@ -1,18 +1,8 @@
-[build-options]
-  observabilityIncluded = true
-
 [package]
-  distribution = "2201.0.2"
-  export = ["securitystatusmonitoringtool"]
-  name = "securitystatusmonitoringtool"
-  org = "wso21234"
+org = "macbook"
+name = "webapp_backend"
+version = "0.1.0"
+distribution = "2201.8.6"
 
-[persist]
-datastore = "mysql"
-module = "securitystatusmonitoringtool"
-
-[[platform.java17.dependency]]
-groupId = "io.ballerina.stdlib"
-artifactId = "persist.sql-native"
-version = "1.2.1"
-
+[build-options]
+observabilityIncluded = true
