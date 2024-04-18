@@ -37,37 +37,27 @@ export default function RepoMoreMenu(props) {
 
   const handleChange = () => {
     const tagName = valueRef.current.value.trim();
-    // const tagId = tagName.replace(/\s+/g, '').toLocaleLowerCase();
 
     if (tagName.length >= 2) {
       props.clearApiData();
       props.startSpinner();
 
       axiosClient()
-        .post(`/addTag/${props.orgId}/${tagName}`)
+        .post(`/addTag/${tagName}`)
         .then(() => {
           sendDataToAPI(
             props.id,
-            props.createdAt,
-            props.monitorStatus === '1' ? 1 : 0,
-            props.orgId,
-            props.repoName,
             props.repoWatchStatus === '1' ? 1 : 0,
             tagName
           );
         })
         .catch((error) => {
           console.log(error);
-          // TODO: Handle error specifically - iff error is for not creating doc then avoid executing sendDataToAPI fn
           if (error.response.status === 401) {
-            window.location.reload(false); // reload the page
+            window.location.reload(false); 
           } else {
             sendDataToAPI(
               props.id,
-              props.createdAt,
-              props.monitorStatus === '1' ? 1 : 0,
-              props.orgId,
-              props.repoName,
               props.repoWatchStatus === '1' ? 1 : 0,
               tagName
             );
@@ -79,19 +69,15 @@ export default function RepoMoreMenu(props) {
     }
   };
 
-  const sendDataToAPI = (id, createdAt, monitorStatus, orgId, repoName, repoWatchStatus, tag) => {
+  const sendDataToAPI = (id, repoWatchStatus, tag) => {
     const payLoad = {
       id,
-      createdAt,
-      monitorStatus,
-      orgId,
-      repoName,
       repoWatchStatus,
       tag
     };
 
     axiosClient()
-      .put(`/changeRepoBasicInfo`, payLoad)
+      .put(`/changeRepoBasicInfo/${id}/${repoWatchStatus}/${tag}`)
       .then(() => {
         props.getLatestApiData();
         // create new event
@@ -136,10 +122,6 @@ export default function RepoMoreMenu(props) {
 
             sendDataToAPI(
               props.id,
-              props.createdAt,
-              props.monitorStatus === '1' ? 1 : 0,
-              props.orgId,
-              props.repoName,
               1,
               props.tag
             );
@@ -161,10 +143,6 @@ export default function RepoMoreMenu(props) {
 
             sendDataToAPI(
               props.id,
-              props.createdAt,
-              props.monitorStatus === '1' ? 1 : 0,
-              props.orgId,
-              props.repoName,
               0,
               props.tag
             );

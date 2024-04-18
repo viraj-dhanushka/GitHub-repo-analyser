@@ -1,10 +1,10 @@
 import ballerina/http;
 import ballerina/log;
-import ballerinax/github;
-// import ballerina/io;
-// import ballerina/time;
 // import ballerina/uuid;
-// import ballerina/sql;
+import ballerina/sql;
+// import ballerina/io;
+import ballerina/time;
+import ballerinax/github;
 import ballerinax/mysql;
 import ballerinax/mysql.driver as _;
 
@@ -17,11 +17,8 @@ configurable int PORT = ?;
 
 string gitHubOrg = "ESLE-Org";
 
-
 string DEFAULT_TAG = "Not Specified";
-string repoTableName = "Repositories";
-string languagesTableName = "Languages";
-string basicRepoDetailsTableName = "BasicRepoDetails";
+
 string tagTableName = "Tags";
 
 github:ConnectionConfig gitHubConfig = {
@@ -36,33 +33,59 @@ map<string|string[]> headers = {
     "Access-Control-Allow-Methods": "GET, POST, DELETE, PUT, OPTIONS"
 };
 
-public type RepoItem record {|
+type RepoItem record {|
     int id?;
     string repoName;
-    string orgName; 
+    string orgName;
     string createdAt;
     string tag;
     int monitorStatus;
     int repoWatchStatus;
 |};
 
+type TagItem record {|
+    int id?;
+    string name;
+|};
+
 service /analyse on new http:Listener(9090) {
 
-        final mysql:Client databaseClient;
+    final mysql:Client databaseClient;
 
     public function init() returns error? {
         self.databaseClient = check new (HOST, USERNAME, PASSWORD, DATABASENAME, PORT);
-        _ = check self.databaseClient->execute(`CREATE TABLE BasicRepoDetails (
-                                           id INT AUTO_INCREMENT,
-                                           repoName VARCHAR(255), 
-                                           orgName VARCHAR(255), 
-                                           createdAt VARCHAR(255), 
-                                           tag VARCHAR(255), 
-                                           monitorStatus INT, 
-                                           repoWatchStatus INT,
-                                           PRIMARY KEY (id)
-                                         )`);
-        // A value of the sql:ExecutionResult type is returned for 'result'. 
+        // _ = check self.databaseClient->execute(`CREATE TABLE BasicRepoDetails (
+        //                                    id INT,
+        //                                    repoName VARCHAR(255), 
+        //                                    orgName VARCHAR(255), 
+        //                                    createdAt VARCHAR(255), 
+        //                                    tag VARCHAR(255), 
+        //                                    monitorStatus INT, 
+        //                                    repoWatchStatus INT,
+        //                                    PRIMARY KEY (id)
+        //                                  )`);
+
+        // _ = check self.databaseClient->execute(`CREATE TABLE Repositories (
+        //                                    id INT,
+        //                                    repoName VARCHAR(255), 
+        //                                    orgName VARCHAR(255), 
+        //                                    description VARCHAR(255), 
+        //                                    dbUpdatedAt VARCHAR(255),
+        //                                    monitorStatus INT, 
+        //                                    repoUrl VARCHAR(255), 
+        //                                    updatedAt VARCHAR(255),
+        //                                    PRIMARY KEY (id)
+        //                                  )`);
+
+        // _ = check self.databaseClient->execute(`CREATE TABLE Tags (
+        //                                     id INT AUTO_INCREMENT,
+        //                                     name VARCHAR(255), 
+        //                                     PRIMARY KEY (id)
+        //                                     )`);
+
+        _ = check self.databaseClient->execute(`INSERT INTO Tags (name) VALUES (${DEFAULT_TAG});`);
+
+
     }
 
     resource function post addRepos/[string orgName]() returns string|error {
@@ -72,95 +95,114 @@ service /analyse on new http:Listener(9090) {
         github:MinimalRepository[] allOrgRepos = check githubEndpoint->/orgs/[orgName]/repos();
 
         foreach github:MinimalRepository repo in allOrgRepos {
-            log:printInfo("Repo is ");
-            log:printInfo(repo.toBalString());
+            // log:printInfo("Repo is ");
+            // log:printInfo(repo.toBalString());
+
             _ = check createDocumentFromRepoBasicDetails(self.databaseClient, repo, orgName, 0, 0, DEFAULT_TAG);
+
+            _ = check createDocumentFromRepository(self.databaseClient, repo, orgName, 0);
         }
 
         return "success for api calling";
     }
 
-    resource function get liveness() returns http:Ok {
-        return http:OK;
+    resource function put changeRepoBasicInfo/[int id]/[int repoWatchStatus]/[string tag]() returns http:Ok|error { //for tags
+        // resource function put changeRepoBasicInfo(@http:Payload RepoBasicDetails repoDetails) returns http:Ok|error { //for tags
+        log:printInfo("Changing Repo Basic Info...");
+
+        // _ = check self.databaseClient->execute(`UPDATE BasicRepoDetails
+        //                                         SET tag = ${repoDetails.tag}, repoWatchStatus = ${repoDetails.repoWatchStatus}
+        //                                         WHERE id = ${repoDetails.id}
+        //                                         `);
+
+        _ = check self.databaseClient->execute(`UPDATE BasicRepoDetails
+                                                SET tag = ${tag}, repoWatchStatus = ${repoWatchStatus}
+                                                WHERE id = ${id}
+                                                `);
+
+        http:Ok response = {
+            body: {
+                "success": true,
+                "data": "Changed Repo Basic Info"
+            },
+            headers: headers
+        };
+        return response;
+    }
+    resource function get getAllRepos/[string tagName]() returns http:Ok|error {
+        json[] repoInfoList = [];
+        stream<RepoItem, sql:Error?> itemStream = self.databaseClient->query(`SELECT * FROM BasicRepoDetails`);
+        repoInfoList = check from RepoItem item in itemStream
+            select item.toJson();
+        http:Ok response = {
+            body: repoInfoList,
+            headers: headers
+        };
+        return response;
+    }
+    resource function post addTag/[string tagName]() returns error? {
+
+        _ = check self.databaseClient->execute(`INSERT INTO Tags (name) VALUES (${tagName});`);
+
     }
 
-    resource function get readiness() returns http:Ok|error {
-        int _ = check self.databaseClient->queryRow(`SELECT COUNT(*) FROM Repositories`);
-        return http:OK;
-    }
-    
+    resource function get getTagsList() returns http:Ok|error {
 
-        // stream<github:Repository, error?> getRepositoriesResponse = check githubEndpoint->repos/orgName/;
-        // error? e = getRepositoriesResponse.forEach(function(github:Repository repository) {
-        //     string repoId = repository["id"].toString();
-        //     string repoName = repository["name"].toString();
-        //     map<json> RepoBasicDetailsDocument = createDocumentFromRepoBasicDetails(repository, orgId, 0, 0, DEFAULT_TAG);
-        //     cosmosdb:DocumentResponse|error docResponseStoreBasicDetails = azureCosmosClient->createDocument(databaseId, basicRepoDetailsContainerId,
-        // repoId, RepoBasicDetailsDocument, orgId);
-        //     if docResponseStoreBasicDetails is cosmosdb:DocumentResponse {
-        //         github:Repository|github:Error repoWithAdditionalInfo = githubEndpoint->getRepository(orgName, repoName);
-        //         if repoWithAdditionalInfo is github:Repository {
-        //             map<json> RepositoryInfoDocument = createDocumentFromRepository(repoWithAdditionalInfo, orgName, orgId, 0);
-        //             cosmosdb:DocumentResponse|error result = azureCosmosClient->createDocument(databaseId, repoContainerId,
-        // repoId, RepositoryInfoDocument, orgId);
-        //             addLanguagesToDbUsingRepoLanguages(RepositoryInfoDocument.get("languages"), databaseId, languagesContainerId, orgId);
-        //         }
-        //     }
-        // });
-        // if (e is error) {
-        //     log:printInfo("Please RETRY again in few minitues...");
-        //     return ("Please RETRY again in few minitues...");
-        // } else {
-        //     log:printInfo("Successfully imported all repos!");
-        //     return ("Successfully imported all repos!");
-        // }
-    
+        json[] tagList = [];
+        stream<TagItem, sql:Error?> itemStream = self.databaseClient->query(`SELECT * FROM Tags`);
+        tagList = check from TagItem item in itemStream
+            select item.toJson();
+
+        http:Ok response = {
+            body: tagList,
+            headers: headers
+        };
+        return response;
+    }
+
 }
 
-    // resource function post .(@http:Payload RepoItem repoItem) returns error? {
-    //     _ = check self.databaseClient->execute(`INSERT INTO ${repoTableName} (repoName, orgName, createdAt, tag, monitorStatus, repoWatchStatus) VALUES (${repoItem.repoName}, ${repoItem.orgName}, ${repoItem.createdAt}, ${repoItem.tag}, ${repoItem.monitorStatus}, ${repoItem.repoWatchStatus});`);
-    // }
+// resource function post .(@http:Payload RepoItem repoItem) returns error? {
+//     _ = check self.databaseClient->execute(`INSERT INTO ${repoTableName} (repoName, orgName, createdAt, tag, monitorStatus, repoWatchStatus) VALUES (${repoItem.repoName}, ${repoItem.orgName}, ${repoItem.createdAt}, ${repoItem.tag}, ${repoItem.monitorStatus}, ${repoItem.repoWatchStatus});`);
+// }
 
 public function createDocumentFromRepoBasicDetails(mysql:Client databaseClient, github:MinimalRepository repository, string orgName, int repoWatchStatus, int monitorStatus, string tag) returns error? {
-        
-    _ = check databaseClient->execute(`INSERT INTO BasicRepoDetails (repoName, orgName, createdAt, tag, monitorStatus, repoWatchStatus) VALUES (
-                                        ${repository["name"].toString()}, ${orgName}, ${repository["created_at"].toString()}, ${tag}, ${monitorStatus}, ${repoWatchStatus});`);
-    
+
+    _ = check databaseClient->execute(`INSERT INTO BasicRepoDetails (id, repoName, orgName, createdAt, tag, monitorStatus, repoWatchStatus) VALUES (
+                                       ${repository["id"]}, ${repository["name"]}, ${orgName}, ${repository["created_at"]}, ${tag}, ${monitorStatus}, ${repoWatchStatus});`);
+
 }
 
 // //TODO: add feature to preserve monitor state and already open Prs
-public function createDocumentFromRepository(github:MinimalRepository repository, string orgName, int monitorStatus) returns map<json> { // string orgId,   
-    string repoName = repository["name"].toString();
-    json languages = repository["languages"].toJson();
-    json[] openPRs = [];
-    stream<github:PullRequest, github:Error?>|error streamResult = githubEndpoint->getPullRequests(orgName, repoName, "OPEN");
-    if streamResult is stream<github:PullRequest, github:Error?> {
-        github:Error? err = streamResult.forEach(function(github:PullRequest pullRequest) {
-            int prnum = pullRequest.number;
-            github:PullRequest|github:Error pr = githubEndpoint->getPullRequest(orgName, repoName, prnum);
-            if pr is github:PullRequest {
-                OpenPR openPR = {
-                    prNumber: prnum,
-                    prUrl: pr.url.toString(),
-                    lastCommit: pr.lastCommit.toJson()
-                };
-                openPRs.push(openPR.toJson());
-            }
-        });
-    }
-    map<json> newDocumentBody = {
-                    description: repository["description"].toString(),
-                    dbUpdatedAt: time:utcToString(time:utcNow()),
-                    languages: languages,
-                    monitorStatus: monitorStatus,
-                    openPRs: openPRs,
-                    orgId: orgId,
-                    repoName: repository["name"].toString(),
-                    repoUrl: repository["url"].toString(),
-                    updatedAt: repository["updatedAt"].toString()
-                };
-    return newDocumentBody;
+public function createDocumentFromRepository(mysql:Client databaseClient, github:MinimalRepository repository, string orgName, int monitorStatus) returns error? { // string orgId,   
+
+    // string description = <string> repository["description"];
+
+    _ = check databaseClient->execute(`INSERT INTO Repositories (id, repoName, orgName, description, dbUpdatedAt, monitorStatus, repoUrl, updatedAt) VALUES (
+                                        ${repository["id"]}, ${repository["name"]}, ${orgName}, ${repository["description"]}, ${time:utcToString(time:utcNow()).toString()}, ${monitorStatus}, ${repository["html_url"]}, ${repository["updated_at"]});`);
+
+    // json[] openPRs = [];
+    // stream<github:PullRequest, github:Error?>|error streamResult = check githubEndpoint->pullRequest(orgName, repoName, "OPEN");
+    // if streamResult is stream<github:PullRequest, github:Error?> {
+    //     github:Error? err = streamResult.forEach(function(github:PullRequest pullRequest) 
+    //         int prnum = pullRequest.number;
+    //         github:PullRequest|github:Error pr = githubEndpoint->getPullRequest(orgName, repoName, prnum);
+    //         if pr is github:PullRequest {
+    //             OpenPR openPR = {
+    //                 prNumber: prnum,
+    //                 prUrl: pr.url.toString(),
+    //                 lastCommit: pr.lastCommit.toJson()
+    //             };
+    //             openPRs.push(openPR.toJson());
+    //         }
+    //     });
+    // }
+    // map<json> newDocumentBody = {
+    //                 openPRs: openPRs,
+    //             };
+    // return newDocumentBody;
 }
+
 public type RepositoryInfo record {
     string id;
     string description;
@@ -173,31 +215,32 @@ public type RepositoryInfo record {
     int monitorStatus;
     string updatedAt;
 };
+
 public type RepoBasicDetails record {
-    string id;
-    string createdAt;
-    int monitorStatus;
-    string orgId;
-    string repoName;
+    int id;
     int repoWatchStatus;
     string tag;
 };
+
 public type RepoUpdateInfo record {
     string id;
     string repoName;
     string orgId;
     int monitorStatus;
 };
+
 public type Language record {|
     string name;
     string id;
 |};
+
 public type LanguageInfo record {
     string id;
     string name;
     json[] testingTools;
     string orgId;
 };
+
 public type OpenPR record {
     int prNumber;
     string prUrl;

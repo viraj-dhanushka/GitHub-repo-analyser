@@ -15,8 +15,7 @@ import MenuPopover from '../../components/MenuPopover';
 import axiosClient from '../../utils/axiosInstance';
 // ----------------------------------------------------------------------
 
-const ORG_ID = process.env.REACT_APP_ORG_ID;
-const DEFAULT_TAG = process.env.REACT_APP_DEFAULT_TAG;
+const DEFAULT_TAG = window.config.REACT_APP_DEFAULT_TAG;
 
 function stringToColor(string) {
   let hash = 0;
@@ -59,13 +58,14 @@ export default function TeamsPopover() {
 
   async function getTagsList() {
     axiosClient()
-      .get(`/getTagsList/${ORG_ID}`)
+      .get(`/getTagsList`)
       .then((getData) => {
-        // console.log('TagList : ', getData.data);
+        console.log('TagList : ', getData.data);
         setApiData(getData.data);
       })
       .catch((error) => {
         if (error.response.status === 401) {
+          console.log('Error Tag : ',error.response);
           window.location.reload(false); // reload the page
         }
       });
@@ -124,7 +124,7 @@ export default function TeamsPopover() {
       localStorage.setItem('currentTag', DEFAULT_TAG);
       console.log('currentTag ===deleteTagName');
     }
-    deleteTag(deleteTagName);
+    // deleteTag(deleteTagName);
     console.log('deletingTag ===', deleteTagName);
   };
 
@@ -132,20 +132,20 @@ export default function TeamsPopover() {
     window.location.reload(false); // reload the page
   };
 
-  async function deleteTag(tagName) {
-    axiosClient()
-      .delete(`/deleteTag/${ORG_ID}/${tagName}`)
-      .then(() => {
-        console.log('deleted success');
-        getTagsList();
-        window.location.reload(false);
-      })
-      .catch((error) => {
-        if (error.response.status === 401) {
-          window.location.reload(false); // reload the page
-        }
-      });
-  }
+  // async function deleteTag(tagName) {
+  //   axiosClient()
+  //     .delete(`/deleteTag/${tagName}`)  //removed org id
+  //     .then(() => {
+  //       console.log('deleted success');
+  //       getTagsList();
+  //       window.location.reload(false);
+  //     })
+  //     .catch((error) => {
+  //       if (error.response.status === 401) {
+  //         window.location.reload(false); // reload the page
+  //       }
+  //     });
+  // }
 
   return (
     <>

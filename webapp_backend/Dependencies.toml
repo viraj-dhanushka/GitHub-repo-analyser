@@ -256,6 +256,9 @@ dependencies = [
 	{org = "ballerina", name = "lang.object"},
 	{org = "ballerina", name = "time"}
 ]
+modules = [
+	{org = "ballerina", packageName = "sql", moduleName = "sql"}
+]
 
 [[package]]
 org = "ballerina"
@@ -272,6 +275,9 @@ name = "time"
 version = "2.4.0"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"}
+]
+modules = [
+	{org = "ballerina", packageName = "time", moduleName = "time"}
 ]
 
 [[package]]
@@ -338,6 +344,8 @@ version = "0.1.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
 	{org = "ballerina", name = "log"},
+	{org = "ballerina", name = "sql"},
+	{org = "ballerina", name = "time"},
 	{org = "ballerinai", name = "observe"},
 	{org = "ballerinax", name = "github"},
 	{org = "ballerinax", name = "mysql"},

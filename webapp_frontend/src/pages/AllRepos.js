@@ -32,9 +32,9 @@ import { RepoListHead, RepoListToolbar, RepoMoreMenu } from '../components/_dash
 
 // ----------------------------------------------------------------------
 
-const ORG_ID = process.env.REACT_APP_ORG_ID;
-const ORG_NAME = process.env.REACT_APP_ORG_NAME;
-const ORG_DISP_NAME = process.env.REACT_APP_ORG_DISP_NAME;
+const ORG_ID = window.config.REACT_APP_ORG_ID;
+const ORG_NAME = window.config.REACT_APP_ORG_NAME;
+const ORG_DISP_NAME = window.config.REACT_APP_ORG_DISP_NAME;
 
 const TABLE_HEAD = [
   { id: 'repoName', label: 'Name', alignRight: false },
@@ -102,7 +102,7 @@ export default function AllRepos() {
     startSpinner();
     // console.log(TagDetails());
     axiosClient()
-      .get(`/getAllRepos/${ORG_ID}/${tagName}`)
+      .get(`/getAllRepos/${tagName}`)
       .then((getData) => {
         console.log(getData.data);
         setApiData(getData.data);
@@ -309,10 +309,6 @@ export default function AllRepos() {
                               clearApiData={clearApiData}
                               startSpinner={startSpinner}
                               id={id}
-                              createdAt={createdAt}
-                              monitorStatus={monitorStatus}
-                              orgId={ORG_ID}
-                              repoName={repoName}
                               repoWatchStatus={repoWatchStatus}
                               tag={tag}
                             />
