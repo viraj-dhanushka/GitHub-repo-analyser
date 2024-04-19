@@ -46,8 +46,7 @@ import Page from '../components/Page';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-const ORG_ID = process.env.REACT_APP_ORG_ID;
-const ORG_NAME = process.env.REACT_APP_ORG_NAME;
+const ORG_NAME = window.config.REACT_APP_ORG_NAME;
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Language', alignRight: false },
@@ -140,10 +139,10 @@ export default function Settings() {
   async function getLatestRepoDetails() {
     startSpinner();
     axiosClient()
-      .post(`/addRepos/${ORG_NAME}/${ORG_ID}`)
+      .post(`/addRepos/${ORG_NAME}`)
       .then(() => {
         console.log('Successfully updated');
-        getLatestLanguageDetails();
+        // getLatestLanguageDetails();
       })
       .catch((error) => {
         if (error.response.status === 401) {
@@ -151,25 +150,25 @@ export default function Settings() {
         }
       });
   }
-  async function getLatestLanguageDetails() {
-    startSpinner();
-    axiosClient()
-      .post(`/addLanguages/${ORG_NAME}/${ORG_ID}`)
-      .then(() => {
-        console.log('Successfully updated');
-        stopSpinner();
-      })
-      .catch((error) => {
-        if (error.response.status === 401) {
-          window.location.reload(false); // reload the page
-        }
-      });
-  }
+  // async function getLatestLanguageDetails() {
+  //   startSpinner();
+  //   axiosClient()
+  //     .post(`/addLanguages/${ORG_NAME}/${ORG_ID}`)
+  //     .then(() => {
+  //       console.log('Successfully updated');
+  //       stopSpinner();
+  //     })
+  //     .catch((error) => {
+  //       if (error.response.status === 401) {
+  //         window.location.reload(false); // reload the page
+  //       }
+  //     });
+  // }
 
   async function getLanguages() {
     startSpinner();
     axiosClient()
-      .get(`/getLanguages/${ORG_ID}`)
+      .get(`/getLanguages/`)
       .then((getData) => {
         // console.log(getData.data);
         setApiData(getData.data);
@@ -185,7 +184,7 @@ export default function Settings() {
   async function getSingleRepository(repoName) {
     startSpinner();
     axiosClient()
-      .post(`/addRepoByName/${ORG_ID}/${ORG_NAME}/${repoName}`)
+      .post(`/addRepoByName/${ORG_NAME}/${repoName}`)
       .then(() => {
         console.log('Successfully imported a new repo');
         stopSpinner();
@@ -488,7 +487,6 @@ export default function Settings() {
                               startSpinner={startSpinner}
                               stopSpinner={stopSpinner}
                               id={id}
-                              orgId={ORG_ID}
                               name={name}
                               testingTools={testingTools}
                             />

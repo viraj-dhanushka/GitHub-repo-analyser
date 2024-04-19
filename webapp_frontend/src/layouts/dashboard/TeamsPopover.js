@@ -65,7 +65,7 @@ export default function TeamsPopover() {
       })
       .catch((error) => {
         if (error.response.status === 401) {
-          console.log('Error Tag : ',error.response);
+          console.log('Error Tag : ', error.response);
           window.location.reload(false); // reload the page
         }
       });
@@ -124,7 +124,7 @@ export default function TeamsPopover() {
       localStorage.setItem('currentTag', DEFAULT_TAG);
       console.log('currentTag ===deleteTagName');
     }
-    // deleteTag(deleteTagName);
+    deleteTag(deleteTagName);
     console.log('deletingTag ===', deleteTagName);
   };
 
@@ -132,20 +132,20 @@ export default function TeamsPopover() {
     window.location.reload(false); // reload the page
   };
 
-  // async function deleteTag(tagName) {
-  //   axiosClient()
-  //     .delete(`/deleteTag/${tagName}`)  //removed org id
-  //     .then(() => {
-  //       console.log('deleted success');
-  //       getTagsList();
-  //       window.location.reload(false);
-  //     })
-  //     .catch((error) => {
-  //       if (error.response.status === 401) {
-  //         window.location.reload(false); // reload the page
-  //       }
-  //     });
-  // }
+  async function deleteTag(tagName) {
+    axiosClient()
+      .delete(`/deleteTag/${tagName}`)
+      .then(() => {
+        console.log('deleted success');
+        getTagsList();
+        window.location.reload(false);
+      })
+      .catch((error) => {
+        if (error.response.status === 401) {
+          window.location.reload(false); // reload the page
+        }
+      });
+  }
 
   return (
     <>

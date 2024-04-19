@@ -9,7 +9,7 @@ export default function axiosClient() {
   const axiosInstance = axios.create({
     // baseURL: "http://localhost:9090/analyse",
     baseURL: API_BASE_URL,
-    //TODO: uncomment this and confihure
+    // TODO: uncomment this and confihure
     // headers: {
     //   Authorization: `Bearer ${getToken()}`
     // }

@@ -33,14 +33,14 @@ import { RepoListHead, RepoListToolbar, RepoMoreMenu } from '../components/_dash
 
 // ----------------------------------------------------------------------
 
-const ORG_ID = process.env.REACT_APP_ORG_ID;
-const ORG_NAME = process.env.REACT_APP_ORG_NAME;
-const ORG_DISP_NAME = process.env.REACT_APP_ORG_DISP_NAME;
+const ORG_ID = window.config.REACT_APP_ORG_ID;
+const ORG_NAME = window.config.REACT_APP_ORG_NAME;
+const ORG_DISP_NAME = window.config.REACT_APP_ORG_DISP_NAME;
 
 const TABLE_HEAD = [
   { id: 'repoName', label: 'Name', alignRight: false },
-  { id: 'createdAt', label: 'Created At', alignRight: false },
-  { id: 'actionStatus', label: 'Action Status', alignRight: false },
+  { id: 'createdAt', label: 'Created Date', alignRight: false },
+  { id: 'repoUrl', label: 'Repo URL', alignRight: false },
   { id: 'tag', label: 'Tag', alignRight: false },
   { id: 'repoWatchStatus', label: 'State', alignRight: false },
   { id: '' }
@@ -101,7 +101,7 @@ export default function NonWatchingRepos() {
   async function getNonWatchRepos(tagName) {
     startSpinner();
     axiosClient()
-      .get(`/getNonWatchingRepos/${ORG_ID}/${tagName}`)
+      .get(`/getNonWatchingRepos/${tagName}`)
       .then((getData) => {
         console.log(getData.data);
         setApiData(getData.data);
@@ -235,7 +235,7 @@ export default function NonWatchingRepos() {
                   {filteredRepos
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, createdAt, monitorStatus, repoWatchStatus, repoName, tag } = row;
+                      const { id, createdAt, repoUrl, repoWatchStatus, repoName, tag } = row;
                       const isItemSelected = selected.indexOf(repoName) !== -1;
 
                       return (
@@ -262,8 +262,7 @@ export default function NonWatchingRepos() {
                               state={{
                                 repoId: id,
                                 createdDate: createdAt,
-                                repoMonitorStatus: monitorStatus,
-                                orgId: ORG_ID,
+                                repoLink: repoUrl,
                                 name: repoName,
                                 watchStatus: repoWatchStatus,
                                 repoTag: tag
@@ -276,12 +275,14 @@ export default function NonWatchingRepos() {
                           <TableCell align="left">{fDate(createdAt)}</TableCell>
 
                           <TableCell align="left">
-                            <Label
-                              variant="filled"
-                              color={(monitorStatus === '0' && 'error') || 'success'}
+                            <Button
+                              startIcon={<Icon icon={link2Fill} />}
+                              component={Link}
+                              target="_blank"
+                              href={repoUrl}
                             >
-                              {monitorStatus === '0' ? 'Not Available' : 'Available'}
-                            </Label>
+                              Link
+                            </Button>
                           </TableCell>
 
                           <TableCell align="left">
@@ -296,9 +297,9 @@ export default function NonWatchingRepos() {
                           <TableCell align="left">
                             <Label
                               variant="ghost"
-                              color={(repoWatchStatus === '0' && 'error') || 'success'}
+                              color={(repoWatchStatus === 0 && 'error') || 'success'}
                             >
-                              {repoWatchStatus === '1' ? 'Watch' : 'Unwatch'}
+                              {repoWatchStatus === 1 ? 'Watch' : 'Unwatch'}
                             </Label>
                           </TableCell>
 
@@ -309,8 +310,6 @@ export default function NonWatchingRepos() {
                               startSpinner={startSpinner}
                               id={id}
                               createdAt={createdAt}
-                              monitorStatus={monitorStatus}
-                              orgId={ORG_ID}
                               repoName={repoName}
                               repoWatchStatus={repoWatchStatus}
                               tag={tag}

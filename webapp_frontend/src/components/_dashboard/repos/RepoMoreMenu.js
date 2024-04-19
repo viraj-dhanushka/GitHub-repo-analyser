@@ -70,14 +70,9 @@ export default function RepoMoreMenu(props) {
   };
 
   const sendDataToAPI = (id, repoWatchStatus, tag) => {
-    const payLoad = {
-      id,
-      repoWatchStatus,
-      tag
-    };
 
     axiosClient()
-      .put(`/changeRepoBasicInfo/${id}/${repoWatchStatus}/${tag}`)
+      .put(`/changeRepoWatchInfo/${id}/${repoWatchStatus}/${tag}`)
       .then(() => {
         props.getLatestApiData();
         // create new event

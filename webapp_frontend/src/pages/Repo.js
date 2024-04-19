@@ -42,7 +42,7 @@ import { RepoListHead, RepoListToolbar } from '../components/_dashboard/repos';
 
 // ----------------------------------------------------------------------
 
-const ORG_NAME = process.env.REACT_APP_ORG_NAME;
+const ORG_NAME = window.config.REACT_APP_ORG_NAME;
 
 const COMMIT_TABLE_HEAD = [
   { id: 'prNumber', label: 'PR Number', alignRight: false },
