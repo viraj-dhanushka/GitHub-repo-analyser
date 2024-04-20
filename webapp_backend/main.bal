@@ -1,9 +1,6 @@
 import ballerina/http;
 import ballerina/log;
-// import ballerina/uuid;
 import ballerina/sql;
-// import ballerina/io;
-// import ballerina/time;
 import ballerinax/github;
 import ballerinax/mysql;
 import ballerinax/mysql.driver as _;
@@ -15,11 +12,7 @@ configurable string PASSWORD = ?;
 configurable string DATABASENAME = ?;
 configurable int PORT = ?;
 
-string gitHubOrg = "ESLE-Org";
-
 string DEFAULT_TAG = "Not Specified";
-
-string tagTableName = "Tags";
 
 github:ConnectionConfig gitHubConfig = {
     auth: {
@@ -54,36 +47,24 @@ service /analyse on new http:Listener(9090) {
 
     public function init() returns error? {
         self.databaseClient = check new (HOST, USERNAME, PASSWORD, DATABASENAME, PORT);
-        // _ = check self.databaseClient->execute(`CREATE TABLE BasicRepoDetails (
-        //                                    id INT,
-        //                                    repoName VARCHAR(255), 
-        //                                    createdAt VARCHAR(255), 
-        //                                    description VARCHAR(255),       
-        //                                    repoUrl VARCHAR(255), 
-        //                                    tag VARCHAR(255), 
-        //                                    repoWatchStatus INT,
-        //                                    PRIMARY KEY (id)
-        //                                  )`);
+        _ = check self.databaseClient->execute(`CREATE TABLE IF NOT EXISTS BasicRepoDetails (
+                                           id INT,
+                                           repoName VARCHAR(255), 
+                                           createdAt VARCHAR(255), 
+                                           description VARCHAR(255),       
+                                           repoUrl VARCHAR(255), 
+                                           tag VARCHAR(255), 
+                                           repoWatchStatus INT,
+                                           PRIMARY KEY (id)
+                                         )`);
 
-        // _ = check self.databaseClient->execute(`CREATE TABLE Repositories (
-        //                                    id INT,
-        //                                    repoName VARCHAR(255), 
-        //                                    orgName VARCHAR(255), 
-        //                                    description VARCHAR(255), 
-        //                                    dbUpdatedAt VARCHAR(255),
-        //                                    monitorStatus INT, 
-        //                                    repoUrl VARCHAR(255), 
-        //                                    updatedAt VARCHAR(255),
-        //                                    PRIMARY KEY (id)
-        //                                  )`);
+        _ = check self.databaseClient->execute(`CREATE TABLE IF NOT EXISTS Tags (
+                                            id INT AUTO_INCREMENT,
+                                            name VARCHAR(255), 
+                                            PRIMARY KEY (id)
+                                            )`);
 
-        // _ = check self.databaseClient->execute(`CREATE TABLE Tags (
-        //                                     id INT AUTO_INCREMENT,
-        //                                     name VARCHAR(255), 
-        //                                     PRIMARY KEY (id)
-        //                                     )`);
-
-        // _ = check self.databaseClient->execute(`INSERT INTO Tags (name) VALUES (${DEFAULT_TAG});`);
+        _ = check self.databaseClient->execute(`INSERT IGNORE INTO Tags (id, name) VALUES (1, ${DEFAULT_TAG});`);
 
     }
 
@@ -91,17 +72,27 @@ service /analyse on new http:Listener(9090) {
         // createDBnContainersIfNotExist(orgId);
         log:printInfo("Getting all repos...");
 
-        github:MinimalRepository[] allOrgRepos = check githubEndpoint->/orgs/[orgName]/repos();
+        github:MinimalRepository[] allOrgRepos = check githubEndpoint->/orgs/[orgName]/repos(sort = "updated", per_page = 50, page = 10);
 
         foreach github:MinimalRepository repo in allOrgRepos {
             // log:printInfo("Repo is ");
             // log:printInfo(repo.toBalString());
 
-            _ = check createTableFromRepoBasicDetails(self.databaseClient, repo, orgName, 0, 0, DEFAULT_TAG);
+            _ = check insertTableDataFromMinimalRepository(self.databaseClient, repo, orgName, 0, 0, DEFAULT_TAG);
 
         }
 
         return "success for api calling";
+    }
+
+    resource function post addRepoByName/[string orgName]/[string repoName]() returns string|error {
+
+        github:FullRepository repo = check githubEndpoint->/repos/[orgName]/[repoName]();
+
+        _ = check insertTableDataFromFullRepository(self.databaseClient, repo, orgName, 0, 0, DEFAULT_TAG);
+
+        return "success for api calling";
+
     }
 
     resource function get getAllRepos/[string tagName]() returns http:Ok|error {
@@ -192,15 +183,15 @@ service /analyse on new http:Listener(9090) {
 
 }
 
-public function createTableFromRepoBasicDetails(mysql:Client databaseClient, github:MinimalRepository repository, string orgName, int repoWatchStatus, int monitorStatus, string tag) returns error? {
+public function insertTableDataFromMinimalRepository(mysql:Client databaseClient, github:MinimalRepository repository, string orgName, int repoWatchStatus, int monitorStatus, string tag) returns error? {
 
     _ = check databaseClient->execute(`INSERT INTO BasicRepoDetails (id, repoName, createdAt, repoUrl, description, tag, repoWatchStatus) VALUES (
                                        ${repository["id"]}, ${repository["name"]}, ${repository["created_at"]}, ${repository["html_url"]}, ${repository["description"]}, ${tag}, ${repoWatchStatus});`);
 
 }
+public function insertTableDataFromFullRepository(mysql:Client databaseClient, github:FullRepository repository, string orgName, int repoWatchStatus, int monitorStatus, string tag) returns error? {
 
-public type OpenPR record {
-    int prNumber;
-    string prUrl;
-    json lastCommit;
-};
+    _ = check databaseClient->execute(`INSERT INTO BasicRepoDetails (id, repoName, createdAt, repoUrl, description, tag, repoWatchStatus) VALUES (
+                                       ${repository["id"]}, ${repository["name"]}, ${repository["created_at"]}, ${repository["html_url"]}, ${repository["description"]}, ${tag}, ${repoWatchStatus});`);
+
+}
