@@ -195,11 +195,11 @@ export default function FavouriteRepos() {
   const isRepoNotFound = filteredRepos.length === 0;
 
   return (
-    <Page title="Watching Repos | Repo Analyser">
+    <Page title="Favourite Repos | Repo Analyser">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Watching Repositories
+            Favourite Repositories
           </Typography>
           <Button
             variant="contained"

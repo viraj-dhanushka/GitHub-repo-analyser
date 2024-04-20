@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 
+import { useAuthContext } from '@asgardeo/auth-react';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
@@ -40,18 +41,18 @@ DashboardSidebar.propTypes = {
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
-  // const isAuthenticated = useIsAuthenticated();
-  // const { instance, accounts } = useMsal();
-  const [username, setUsername] = useState(null);
-  const [name, setName] = useState(null);
+  const { state } = useAuthContext();
 
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     setName(accounts[0]?.name);
-  //     setUsername(accounts[0]?.username);
-  //     // console.log(response);
-  //   }
-  // }, [isAuthenticated]);
+  const [username, setUsername] = useState('mark.zuckerburg@exmaple.com');
+  const [name, setName] = useState('Mark Zuckerburg');
+
+  useEffect(() => {
+    if (state.isAuthenticated) {
+      setName(state.displayName);
+      setUsername(state.username);
+      // console.log(response);
+    }
+  }, []);
 
   useEffect(() => {
     if (isOpenSidebar) {

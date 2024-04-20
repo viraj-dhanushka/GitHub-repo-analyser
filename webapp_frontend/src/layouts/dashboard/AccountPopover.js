@@ -23,7 +23,7 @@ const MENU_OPTIONS = [
   //   label: 'Profile',
   //   icon: personFill,
   //   linkTo: '#'
-  // },
+  // }, 
   {
     label: 'Settings',
     icon: settings2Fill,
@@ -34,31 +34,18 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
-  const { state, getBasicUserInfo, signOut } = useAuthContext();
+  const { state, signOut } = useAuthContext();
 
   const [username, setUsername] = useState(null);
   const [name, setName] = useState(null);
 
-  // const setIsInitLogin = (value) => {
-  //   sessionStorage.setItem('isInitLogin', value);
-  // };
-
-  // function handleLogout(instance) {
-  //   setOpen(false);
-  //   setIsInitLogin('false');
-  //   instance.logoutRedirect().catch((e) => {
-  //     setIsInitLogin('true');
-  //     console.error(e);
-  //   });
-  // }
   useEffect(() => {
     if (state.isAuthenticated) {
-      setName(getBasicUserInfo.name);
-      setUsername(getBasicUserInfo.username);
-        // console.log(response);
-
+      setName(state.displayName);
+      setUsername(state.username);
+      // console.log(response);
     }
-  }, [getBasicUserInfo.name, getBasicUserInfo.username, state.isAuthenticated]);
+  }, [state.isAuthenticated]);
 
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
@@ -103,10 +90,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {name == null ? '' : name}
+            {name == null ? 'Mark Zuckerburg' : name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {username == null ? '' : username}
+            {username == null ? 'mark.zuckerburg@exmaple.com' : username}
           </Typography>
         </Box>
 

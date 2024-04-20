@@ -12,7 +12,7 @@ import Login from './pages/Login';
 import Loader from './pages/Loader';
 
 export default function App() {
-  const { state, signIn, signOut } = useAuthContext();
+  const { state } = useAuthContext();
 
   const getIsInitLogin = () => {
     if (sessionStorage.getItem('isInitLogin') === 'true') {

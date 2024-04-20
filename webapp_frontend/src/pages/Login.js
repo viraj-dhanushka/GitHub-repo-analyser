@@ -82,7 +82,7 @@ export default function Login() {
                 <Stack sx={{ mb: 5 }}>
                   <ThemeProvider theme={Fonttheme}>
                     <Typography variant="h4" gutterBottom sx={{ mt: 10 }}>
-                      Sign in to Security Status Monitoring Tool
+                      Sign in to GitHub Repo Analyser
                     </Typography>
 
                     <Typography sx={{ color: 'text.secondary' }}>

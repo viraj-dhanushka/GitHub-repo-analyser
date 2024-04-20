@@ -49,7 +49,7 @@ export default function AppWidgets2() {
       </IconWrapperStyle>
       <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
-        ESLE Conclusions
+        Total Bugs - P1
       </Typography>
     </RootStyle>
   );

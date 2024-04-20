@@ -193,11 +193,11 @@ export default function NonFavouriteRepos() {
   const isRepoNotFound = filteredRepos.length === 0;
 
   return (
-    <Page title="Non Watching Repos | Repo Analyser">
+    <Page title="Non Favourite Repos | Repo Analyser">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Non Watching Repositories
+            Non Favourite Repositories
           </Typography>
           <Button
             variant="contained"

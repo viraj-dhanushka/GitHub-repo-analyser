@@ -25,8 +25,8 @@ export default function Router() {
         { element: <Navigate to="/dashboard/app" replace /> },
         { path: 'app', element: <DashboardApp /> },
         { path: 'allRepos', element: <AllRepos /> },
-        { path: 'watchingRepos', element: <FavouriteRepos /> },
-        { path: 'nonWatchingRepos', element: <NonFavouriteRepos /> },
+        { path: 'favouriteRepos', element: <FavouriteRepos /> },
+        { path: 'nonFavouriteRepos', element: <NonFavouriteRepos /> },
         { path: 'repo', element: <Repo /> },
         { path: 'settings', element: <Settings /> }
       ]
@@ -36,7 +36,7 @@ export default function Router() {
       element: <LogoOnlyLayout />,
       children: [
         { path: '404', element: <NotFound /> },
-        { path: '/', element: <Navigate to="/dashboard" /> },
+        { path: '/', element: <Navigate to="/dashboard/app" /> },
         { path: '*', element: <Navigate to="/404" /> }
       ]
     },
