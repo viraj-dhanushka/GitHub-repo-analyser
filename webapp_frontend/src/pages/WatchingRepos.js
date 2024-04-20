@@ -34,7 +34,6 @@ import { RepoListHead, RepoListToolbar, RepoMoreMenu } from '../components/_dash
 
 // ----------------------------------------------------------------------
 
-const ORG_ID = window.config.REACT_APP_ORG_ID;
 const ORG_NAME = window.config.REACT_APP_ORG_NAME;
 const ORG_DISP_NAME = window.config.REACT_APP_ORG_DISP_NAME;
 
@@ -237,7 +236,7 @@ export default function WatchingRepos() {
                   {filteredRepos
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, createdAt, repoUrl, repoWatchStatus, repoName, tag } = row;
+                      const { id, createdAt, description, repoUrl, repoWatchStatus, repoName, tag } = row;
                       const isItemSelected = selected.indexOf(repoName) !== -1;
 
                       return (
@@ -263,6 +262,7 @@ export default function WatchingRepos() {
                               to="/dashboard/repo"
                               state={{
                                 repoId: id,
+                                reprDescrption: description,
                                 createdDate: createdAt,
                                 repoLink: repoUrl,
                                 name: repoName,

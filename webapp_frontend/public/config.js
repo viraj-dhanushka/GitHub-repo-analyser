@@ -1,6 +1,7 @@
 window.config = {
   REACT_APP_DEFAULT_TAG:"Not Specified",
   REACT_APP_BASE_URL: "http://localhost:9090/analyse",
+  REACT_APP_GITHUB_API_BASE_URL: "http://localhost:9000/github",
     REACT_APP_ORG_ID: "ESLE-Org",
     REACT_APP_ORG_NAME: "ESLE-Org",
     REACT_APP_ORG_DISP_NAME: "ESLE",

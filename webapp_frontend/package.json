@@ -68,7 +68,8 @@
     "simplebar": "^5.3.5",
     "simplebar-react": "^2.3.5",
     "web-vitals": "^2.1.0",
-    "yup": "^0.32.9"
+    "yup": "^0.32.9",
+    "mui-markdown":"1.1.13"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",

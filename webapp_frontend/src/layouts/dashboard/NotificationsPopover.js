@@ -39,20 +39,20 @@ import MenuPopover from '../../components/MenuPopover';
 const NOTIFICATIONS = [
   {
     id: faker.datatype.uuid(),
-    title: 'Your order is placed',
-    description: 'waiting for shipping',
+    title: 'PR succesfully merged',
+    description: 'waiting to close',
     avatar: null,
     type: 'order_placed',
-    createdAt: set(new Date(), { hours: 10, minutes: 30 }),
+    createdAt: set(new Date(), { hours: 3, minutes: 30 }),
     isUnRead: true
   },
   {
     id: faker.datatype.uuid(),
     title: faker.name.findName(),
-    description: 'answered to your comment on the Repo Analyser',
+    description: 'answered to your comment in the code review',
     avatar: mockImgAvatar(2),
     type: 'friend_interactive',
-    createdAt: sub(new Date(), { hours: 3, minutes: 30 }),
+    createdAt: sub(new Date(), { hours: 10, minutes: 30 }),
     isUnRead: true
   },
   {
@@ -66,8 +66,8 @@ const NOTIFICATIONS = [
   },
   {
     id: faker.datatype.uuid(),
-    title: 'You have new mail',
-    description: 'sent from Guido Padberg',
+    title: 'You have new PR',
+    description: 'to be reviewed',
     avatar: null,
     type: 'mail',
     createdAt: sub(new Date(), { days: 2, hours: 3, minutes: 30 }),
@@ -75,8 +75,8 @@ const NOTIFICATIONS = [
   },
   {
     id: faker.datatype.uuid(),
-    title: 'Delivery processing',
-    description: 'Your order is being shipped',
+    title: '2 Issues',
+    description: 'has being closed',
     avatar: null,
     type: 'order_shipped',
     createdAt: sub(new Date(), { days: 3, hours: 3, minutes: 30 }),
