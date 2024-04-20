@@ -23,13 +23,13 @@ const sidebarConfig = [
     icon: getIcon(shoppingBagFill)
   },
   {
-    title: 'watching Repos',
-    path: '/dashboard/watchingRepos',
+    title: 'Favourite Repos',
+    path: '/dashboard/favouriteRepos',
     icon: getIcon(fileTextFill)
   },
   {
-    title: 'non Watching Repos',
-    path: '/dashboard/nonWatchingRepos',
+    title: 'Non Favourite Repos',
+    path: '/dashboard/nonFavouriteRepos',
     icon: getIcon(alertTriangleFill)
   }
 ];

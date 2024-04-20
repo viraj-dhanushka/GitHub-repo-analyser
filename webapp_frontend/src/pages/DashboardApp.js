@@ -1,9 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-
-// material
 import { Box, Grid, Container, Typography } from '@mui/material';
-// components
 import Page from '../components/Page';
 import {
   AppTasks,
@@ -19,8 +16,6 @@ import {
   AppWidgets10,
   AppWidgets11
 } from '../components/_dashboard/app';
-
-// ----------------------------------------------------------------------
 
 export default function DashboardApp() {
   return (

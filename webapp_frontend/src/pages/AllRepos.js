@@ -30,8 +30,6 @@ import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
 import { RepoListHead, RepoListToolbar, RepoMoreMenu } from '../components/_dashboard/repos';
 
-// ----------------------------------------------------------------------
-
 const ORG_NAME = window.config.REACT_APP_ORG_NAME;
 const ORG_DISP_NAME = window.config.REACT_APP_ORG_DISP_NAME;
 
@@ -43,8 +41,6 @@ const TABLE_HEAD = [
   { id: 'repoWatchStatus', label: 'State', alignRight: false },
   { id: '' }
 ];
-
-// ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {

@@ -80,7 +80,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function WatchingRepos() {
+export default function FavouriteRepos() {
   const [apiData, setApiData] = useState([]);
   const [loading, setLoading] = useState(false);
 

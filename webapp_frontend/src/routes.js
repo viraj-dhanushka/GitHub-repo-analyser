@@ -8,8 +8,8 @@ import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
 import DashboardApp from './pages/DashboardApp';
 import AllRepos from './pages/AllRepos';
-import WatchingRepos from './pages/WatchingRepos';
-import NonWatchingRepos from './pages/NonWatchingRepos';
+import FavouriteRepos from './pages/FavouriteRepos';
+import NonFavouriteRepos from './pages/NonFavouriteRepos';
 import NotFound from './pages/Page404';
 import Repo from './pages/Repo';
 import Settings from './pages/Settings';
@@ -25,8 +25,8 @@ export default function Router() {
         { element: <Navigate to="/dashboard/app" replace /> },
         { path: 'app', element: <DashboardApp /> },
         { path: 'allRepos', element: <AllRepos /> },
-        { path: 'watchingRepos', element: <WatchingRepos /> },
-        { path: 'nonWatchingRepos', element: <NonWatchingRepos /> },
+        { path: 'watchingRepos', element: <FavouriteRepos /> },
+        { path: 'nonWatchingRepos', element: <NonFavouriteRepos /> },
         { path: 'repo', element: <Repo /> },
         { path: 'settings', element: <Settings /> }
       ]
