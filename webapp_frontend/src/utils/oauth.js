@@ -4,8 +4,8 @@ const OAUTH_CONFIG = {
   SKIP_TOKEN_EXCHANGE: false,
   BEARER_TOKEN: window.config.REACT_APP_CHOREO_TOKEN,
   TOKEN_APIS: {
-    MSAL_TOKEN_EXCHANGE: window.config.REACT_APP_MSAL_TOKEN_EXCHANGE_URL,
-    MSAL_TOKEN_EXCHANGE_AUTH_HEADER: window.config.REACT_APP_MSAL_TOKEN_EXCHANGE_AUTH_HEADER
+    ASGARDEO_TOKEN_EXCHANGE: window.config.REACT_APP_ASGARDEO_TOKEN_EXCHANGE_URL,
+    ASGARDEO_TOKEN_EXCHANGE_AUTH_HEADER: window.config.REACT_APP_ASGARDEO_TOKEN_EXCHANGE_AUTH_HEADER
   }
 };
 
@@ -26,7 +26,7 @@ export async function refreshToken(callback) {
         getNewAPIToken(callback);
       }
     } catch (e) {
-      console.error('Could not refresh access token!');
+      console.error('Unable to refresh access token!');
     }
   }
 }
@@ -60,12 +60,12 @@ export async function getNewAPIToken(callback) {
 
   const headers = {
     token: idToken,
-    'API-Key': `${OAUTH_CONFIG.TOKEN_APIS.MSAL_TOKEN_EXCHANGE_AUTH_HEADER}`
+    'API-Key': `${OAUTH_CONFIG.TOKEN_APIS.ASGARDEO_TOKEN_EXCHANGE_AUTH_HEADER}`
   };
 
   try {
     console.log(headers);
-    const fetchResult = fetch(OAUTH_CONFIG.TOKEN_APIS.MSAL_TOKEN_EXCHANGE, {
+    const fetchResult = fetch(OAUTH_CONFIG.TOKEN_APIS.ASGARDEO_TOKEN_EXCHANGE, {
       method: 'GET',
       headers
     });
@@ -98,15 +98,15 @@ export async function getNewAPIToken(callback) {
         );
         switch (response.status) {
           case 404:
-            return 'Looks like the services of the application are under maintenance at the moment. Please try again in a few minutes.';
+            return 'It appears that the application services are undergoing maintenance right now. Kindly try again in a short while.';
           case 401:
-            return 'It seems that the services of the application are temporarily inaccessible. Please contact the Internal Apps Team if this continues.';
+            return 'It seems that the services of the application are temporarily inaccessible. Kindly try again in a short while.';
           default:
-            return 'The application seems to have run into an issue! Try reloading the page. Please contact the Internal Apps Team if this continues.';
+            return 'Try reloading the page. Kindly try again in a short while.';
         }
       }
     }
   } catch (exception) {
-    return 'Looks like the services of the application are under maintenance or unavailable at the moment. Please try again in a few minutes.';
+    return 'Please try again in a few minutes.';
   }
 }

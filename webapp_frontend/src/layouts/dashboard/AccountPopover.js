@@ -36,8 +36,8 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const { state, signOut } = useAuthContext();
 
-  const [username, setUsername] = useState(null);
-  const [name, setName] = useState(null);
+  const [username, setUsername] = useState('name@exmaple.com');
+  const [name, setName] = useState('Display Name');
 
   useEffect(() => {
     if (state.isAuthenticated) {
@@ -90,10 +90,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {name == null ? 'Mark Zuckerburg' : name}
+            {name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {username == null ? 'mark.zuckerburg@exmaple.com' : username}
+            {username}
           </Typography>
         </Box>
 

@@ -43,8 +43,8 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
   const { state } = useAuthContext();
 
-  const [username, setUsername] = useState('mark.zuckerburg@exmaple.com');
-  const [name, setName] = useState('Mark Zuckerburg');
+  const [username, setUsername] = useState('name@exmaple.com');
+  const [name, setName] = useState('Display Name');
 
   useEffect(() => {
     if (state.isAuthenticated) {
@@ -80,10 +80,10 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
             <Avatar src={account.photoURL} alt="photoURL" />
             <Box sx={{ my: 1.5, px: 2.5 }}>
               <Typography variant="subtitle1" noWrap>
-                {name == null ? '' : name}
+                {name}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                {username == null ? '' : username}
+                {username}
               </Typography>
             </Box>
           </AccountStyle>

@@ -205,8 +205,8 @@ export default function Settings() {
                   )}
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={handleClose}>Disagree</Button>
-                  <Button onClick={handleAgree}>Agree</Button>
+                  <Button onClick={handleClose}>Cancel</Button>
+                  <Button onClick={handleAgree}>OK</Button>
                 </DialogActions>
               </Dialog>
             </div>

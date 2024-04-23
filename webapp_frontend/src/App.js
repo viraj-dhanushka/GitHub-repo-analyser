@@ -2,7 +2,6 @@
 /* eslint-disable no-nested-ternary */
 import { useAuthContext } from '@asgardeo/auth-react';
 import React, { useEffect, useState } from 'react';
-import Button from '@mui/material/Button';
 import Router from './routes';
 import ThemeConfig from './theme';
 import GlobalStyles from './theme/globalStyles';
