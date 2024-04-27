@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 
 import * as React from 'react';
-import axiosGitHubClient from '../utils/axiosGitHubInstance';
+import axiosClient from '../utils/axiosInstance';
 import { fToNow } from '../utils/formatTime';
 import Page from '../components/Page';
 
@@ -51,7 +51,7 @@ export default function Repos() {
   const [json, setJson] = useState({});
 
   async function fullRepository(name) {
-    axiosGitHubClient()
+    axiosClient()
       .get(`/fullRepository/${ORG_NAME}/${name}`)
       .then((getData) => {
         setJson(getData.data);

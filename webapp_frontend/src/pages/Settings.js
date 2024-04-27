@@ -133,7 +133,7 @@ export default function Settings() {
     if (repo) {
       fetchReadme();
     }
-  }, [repo]);
+  }, []);
 
   return (
     <Page title="Settings | Repo Analyser">

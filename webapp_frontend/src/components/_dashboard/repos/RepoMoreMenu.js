@@ -4,6 +4,8 @@
 import { Icon } from '@iconify/react';
 import { useRef, useState } from 'react';
 import editFill from '@iconify/icons-eva/edit-fill';
+import textFill from '@iconify/icons-eva/text-fill';
+import bookmarkOutline from '@iconify/icons-eva/bookmark-outline';
 import { Link as RouterLink } from 'react-router-dom';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
@@ -47,7 +49,7 @@ export default function RepoMoreMenu(props) {
         .then(() => {
           sendDataToAPI(
             props.id,
-            props.repoWatchStatus === '1' ? 1 : 0,
+            props.repoFavStatus === '1' ? 1 : 0,
             tagName
           );
         })
@@ -58,7 +60,7 @@ export default function RepoMoreMenu(props) {
           } else {
             sendDataToAPI(
               props.id,
-              props.repoWatchStatus === '1' ? 1 : 0,
+              props.repoFavStatus === '1' ? 1 : 0,
               tagName
             );
           }
@@ -69,10 +71,10 @@ export default function RepoMoreMenu(props) {
     }
   };
 
-  const sendDataToAPI = (id, repoWatchStatus, tag) => {
+  const sendDataToAPI = (id, repoFavStatus, tag) => {
 
     axiosClient()
-      .put(`/changeRepoWatchInfo/${id}/${repoWatchStatus}/${tag}`)
+      .put(`/changeRepoWatchInfo/${id}/${repoFavStatus}/${tag}`)
       .then(() => {
         props.getLatestApiData();
         // create new event
@@ -123,9 +125,9 @@ export default function RepoMoreMenu(props) {
           }}
         >
           <ListItemIcon>
-            <Icon icon={editFill} width={24} height={24} />
+            <Icon icon={bookmarkOutline} width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Watch" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText primary="Add to Favourite" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
         <MenuItem
@@ -146,12 +148,12 @@ export default function RepoMoreMenu(props) {
           <ListItemIcon>
             <Icon icon={trash2Outline} width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Unwatch" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText primary="Make Non Fav" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
         <MenuItem sx={{ color: 'text.secondary' }} onClick={handleClickOpen}>
           <ListItemIcon>
-            <Icon icon={editFill} width={24} height={24} />
+            <Icon icon={textFill} width={24} height={24} />
           </ListItemIcon>
           <ListItemText primary="Tag" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>

@@ -38,7 +38,7 @@ const TABLE_HEAD = [
   { id: 'createdAt', label: 'Created Date', alignRight: false },
   { id: 'repoUrl', label: 'Repo URL', alignRight: false },
   { id: 'tag', label: 'Tag', alignRight: false },
-  { id: 'repoWatchStatus', label: 'State', alignRight: false },
+  { id: 'repoFavStatus', label: 'State', alignRight: false },
   { id: '' }
 ];
 
@@ -231,7 +231,7 @@ export default function AllRepos() {
                   {filteredRepos
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, createdAt, description, repoUrl, repoWatchStatus, repoName, tag } = row;
+                      const { id, createdAt, description, repoUrl, repoFavStatus, repoName, tag } = row;
                       const isItemSelected = selected.indexOf(repoName) !== -1;
 
                       return (
@@ -261,7 +261,7 @@ export default function AllRepos() {
                                 createdDate: createdAt,
                                 repoLink: repoUrl,
                                 name: repoName,
-                                watchStatus: repoWatchStatus,
+                                watchStatus: repoFavStatus,
                                 repoTag: tag
                               }}
                             >
@@ -294,9 +294,9 @@ export default function AllRepos() {
                           <TableCell align="left">
                             <Label
                               variant="ghost"
-                              color={(repoWatchStatus === 0 && 'error') || 'success'}
+                              color={(repoFavStatus === 0 && 'error') || 'success'}
                             >
-                              {repoWatchStatus === 1 ? 'Watch' : 'Unwatch'}
+                              {repoFavStatus === 1 ? 'Favourite' : 'Non Favourite'}
                             </Label>
                           </TableCell>
 
@@ -306,7 +306,7 @@ export default function AllRepos() {
                               clearApiData={clearApiData}
                               startSpinner={startSpinner}
                               id={id}
-                              repoWatchStatus={repoWatchStatus}
+                              repoFavStatus={repoFavStatus}
                               tag={tag}
                             />
                           </TableCell>

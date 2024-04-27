@@ -41,7 +41,7 @@ const TABLE_HEAD = [
   { id: 'createdAt', label: 'Created Date', alignRight: false },
   { id: 'repoUrl', label: 'Repo URL', alignRight: false },
   { id: 'tag', label: 'Tag', alignRight: false },
-  { id: 'repoWatchStatus', label: 'State', alignRight: false },
+  { id: 'repoFavStatus', label: 'State', alignRight: false },
   { id: '' }
 ];
 
@@ -100,7 +100,7 @@ export default function NonFavouriteRepos() {
   async function getNonWatchRepos(tagName) {
     startSpinner();
     axiosClient()
-      .get(`/getNonWatchingRepos/${tagName}`)
+      .get(`/getNonFavouriteRepos/${tagName}`)
       .then((getData) => {
         console.log(getData.data);
         setApiData(getData.data);
@@ -234,7 +234,7 @@ export default function NonFavouriteRepos() {
                   {filteredRepos
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, createdAt, description, repoUrl, repoWatchStatus, repoName, tag } = row;
+                      const { id, createdAt, description, repoUrl, repoFavStatus, repoName, tag } = row;
                       const isItemSelected = selected.indexOf(repoName) !== -1;
 
                       return (
@@ -264,7 +264,7 @@ export default function NonFavouriteRepos() {
                                 createdDate: createdAt,
                                 repoLink: repoUrl,
                                 name: repoName,
-                                watchStatus: repoWatchStatus,
+                                watchStatus: repoFavStatus,
                                 repoTag: tag
                               }}
                             >
@@ -297,9 +297,9 @@ export default function NonFavouriteRepos() {
                           <TableCell align="left">
                             <Label
                               variant="ghost"
-                              color={(repoWatchStatus === 0 && 'error') || 'success'}
+                              color={(repoFavStatus === 0 && 'error') || 'success'}
                             >
-                              {repoWatchStatus === 1 ? 'Watch' : 'Unwatch'}
+                              {repoFavStatus === 1 ? 'Favourite' : 'Non Favourite'}
                             </Label>
                           </TableCell>
 
@@ -311,7 +311,7 @@ export default function NonFavouriteRepos() {
                               id={id}
                               createdAt={createdAt}
                               repoName={repoName}
-                              repoWatchStatus={repoWatchStatus}
+                              repoFavStatus={repoFavStatus}
                               tag={tag}
                             />
                           </TableCell>
