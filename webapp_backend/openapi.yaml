@@ -1,0 +1,263 @@
+openapi: 3.0.1
+info:
+  title: Analyse
+  version: 0.1.0
+paths:
+  /addRepos/{orgName}:
+    post:
+      operationId: postAddreposOrgname
+      parameters:
+      - name: orgName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: Any Response
+          content:
+            '*/*':
+              schema:
+                description: Any type of entity body
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+  /addRepoByName/{orgName}/{repoName}:
+    post:
+      operationId: postAddrepobynameOrgnameReponame
+      parameters:
+      - name: orgName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: repoName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: Any Response
+          content:
+            '*/*':
+              schema:
+                description: Any type of entity body
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+  /getAllRepos/{tagName}:
+    get:
+      operationId: getGetallreposTagname
+      parameters:
+      - name: tagName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: Any Response
+          content:
+            '*/*':
+              schema:
+                description: Any type of entity body
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+  /getFavouriteRepos/{tagName}:
+    get:
+      operationId: getGetfavouritereposTagname
+      parameters:
+      - name: tagName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: Any Response
+          content:
+            '*/*':
+              schema:
+                description: Any type of entity body
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+  /getNonFavouriteRepos/{tagName}:
+    get:
+      operationId: getGetnonfavouritereposTagname
+      parameters:
+      - name: tagName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: Any Response
+          content:
+            '*/*':
+              schema:
+                description: Any type of entity body
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+  /addTag/{tagName}:
+    post:
+      operationId: postAddtagTagname
+      parameters:
+      - name: tagName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: BadRequest
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+  /changeRepoWatchInfo/{id}/{repoFavStatus}/{tag}:
+    put:
+      operationId: putChangerepowatchinfoIdRepofavstatusTag
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: repoFavStatus
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: tag
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: Any Response
+          content:
+            '*/*':
+              schema:
+                description: Any type of entity body
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+  /getTagsList:
+    get:
+      operationId: getGettagslist
+      responses:
+        default:
+          description: Any Response
+          content:
+            '*/*':
+              schema:
+                description: Any type of entity body
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+  /deleteTag/{tagName}:
+    delete:
+      operationId: deleteDeletetagTagname
+      parameters:
+      - name: tagName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: Any Response
+          content:
+            '*/*':
+              schema:
+                description: Any type of entity body
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+  /fullRepository/{orgName}/{repoName}:
+    get:
+      operationId: getFullrepositoryOrgnameReponame
+      parameters:
+      - name: orgName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: repoName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: Any Response
+          content:
+            '*/*':
+              schema:
+                description: Any type of entity body
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+components:
+  schemas:
+    ErrorPayload:
+      type: object
+      properties:
+        reason:
+          type: string
+          description: Reason phrase
+        path:
+          type: string
+          description: Request path
+        method:
+          type: string
+          description: Method type of the request
+        message:
+          type: string
+          description: Error message
+        timestamp:
+          type: string
+          description: Timestamp of the error
+        status:
+          type: integer
+          description: Relevant HTTP status code
+          format: int32
