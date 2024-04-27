@@ -1,5 +1,5 @@
 import ballerina/http;
-// import ballerina/log;
+import ballerina/log;
 import ballerina/sql;
 import ballerinax/github;
 import ballerinax/mysql;
@@ -33,7 +33,7 @@ type RepoItem record {|
     string? description;
     string repoUrl;
     string tag;
-    int repoWatchStatus;
+    int repoFavStatus;
 |};
 
 type TagItem record {|
@@ -41,7 +41,7 @@ type TagItem record {|
     string name;
 |};
 
-service /ghanalyse on new http:Listener(9090) {
+service /ghanalyse on new http:Listener(9000) {
 
     final mysql:Client databaseClient;
 
@@ -54,7 +54,7 @@ service /ghanalyse on new http:Listener(9090) {
                                            description VARCHAR(255),       
                                            repoUrl VARCHAR(255), 
                                            tag VARCHAR(255), 
-                                           repoWatchStatus INT,
+                                           repoFavStatus INT,
                                            PRIMARY KEY (id)
                                          )`);
 
@@ -70,11 +70,11 @@ service /ghanalyse on new http:Listener(9090) {
 
     resource function post addRepos/[string orgName]() returns http:Ok|error {
 
-        github:MinimalRepository[] allOrgRepos = check githubEndpoint->/orgs/[orgName]/repos(sort = "updated", per_page = 50, page = 10);
+        github:MinimalRepository[] allOrgRepos = check githubEndpoint->/orgs/[orgName]/repos();
 
         foreach github:MinimalRepository repo in allOrgRepos {
-            // log:printInfo("Repo is ");
-            // log:printInfo(repo.toBalString());
+            log:printInfo("Repo is ");
+            log:printInfo(repo.toBalString());
 
             _ = check insertTableDataFromMinimalRepository(self.databaseClient, repo, orgName, 0, 0, DEFAULT_TAG);
 
@@ -113,9 +113,9 @@ service /ghanalyse on new http:Listener(9090) {
         return response;
     }
 
-    resource function get getWatchingRepos/[string tagName]() returns http:Ok|error {
+    resource function get getFavouriteRepos/[string tagName]() returns http:Ok|error {
         json[] repoInfoList = [];
-        stream<RepoItem, sql:Error?> itemStream = self.databaseClient->query(`SELECT * FROM BasicRepoDetails WHERE tag = ${tagName} AND repoWatchStatus = 1`);
+        stream<RepoItem, sql:Error?> itemStream = self.databaseClient->query(`SELECT * FROM BasicRepoDetails WHERE tag = ${tagName} AND repoFavStatus = 1`);
         repoInfoList = check from RepoItem item in itemStream
             select item.toJson();
         http:Ok response = {
@@ -125,9 +125,9 @@ service /ghanalyse on new http:Listener(9090) {
         return response;
     }
 
-    resource function get getNonWatchingRepos/[string tagName]() returns http:Ok|error {
+    resource function get getNonFavouriteRepos/[string tagName]() returns http:Ok|error {
         json[] repoInfoList = [];
-        stream<RepoItem, sql:Error?> itemStream = self.databaseClient->query(`SELECT * FROM BasicRepoDetails WHERE tag = ${tagName} AND repoWatchStatus = 0`);
+        stream<RepoItem, sql:Error?> itemStream = self.databaseClient->query(`SELECT * FROM BasicRepoDetails WHERE tag = ${tagName} AND repoFavStatus = 0`);
         repoInfoList = check from RepoItem item in itemStream
             select item.toJson();
         http:Ok response = {
@@ -136,17 +136,24 @@ service /ghanalyse on new http:Listener(9090) {
         };
         return response;
     }
-    resource function post addTag/[string tagName]() returns error? {
+    resource function post addTag/[string tagName]() returns http:Ok|error? {
 
-        _ = check self.databaseClient->execute(`INSERT INTO Tags (name) VALUES (${tagName});`);
-
+        _ = check self.databaseClient->execute(`INSERT IGNORE INTO Tags (name) VALUES (${tagName});`);
+        http:Ok response = {
+            body: {
+                "success": true,
+                "data": "Added a new tag"
+            },
+            headers: headers
+        };
+        return response;
     }
 
-    resource function put changeRepoWatchInfo/[int id]/[int repoWatchStatus]/[string tag]() returns http:Ok|error { //for tags
-        // log:printInfo("Changing Repo Basic Info...");
+    resource function put changeRepoWatchInfo/[int id]/[int repoFavStatus]/[string tag]() returns http:Ok|error { //for tags
+        log:printInfo("Changing Repo Basic Info...");
 
         _ = check self.databaseClient->execute(`UPDATE BasicRepoDetails
-                                                SET tag = ${tag}, repoWatchStatus = ${repoWatchStatus}
+                                                SET tag = ${tag}, repoFavStatus = ${repoFavStatus}
                                                 WHERE id = ${id}`);
 
         http:Ok response = {
@@ -181,7 +188,7 @@ service /ghanalyse on new http:Listener(9090) {
 
         _ = check self.databaseClient->execute(`DELETE FROM Tags WHERE name=${tagName};`);
         http:Ok response = {
-            body: "delete success",
+            body: "Delete success",
             headers: headers
         };
         return response;
@@ -202,16 +209,16 @@ service /ghanalyse on new http:Listener(9090) {
 
 }
 
-public function insertTableDataFromMinimalRepository(mysql:Client databaseClient, github:MinimalRepository repository, string orgName, int repoWatchStatus, int monitorStatus, string tag) returns error? {
+public function insertTableDataFromMinimalRepository(mysql:Client databaseClient, github:MinimalRepository repository, string orgName, int repoFavStatus, int monitorStatus, string tag) returns error? {
 
-    _ = check databaseClient->execute(`INSERT INTO BasicRepoDetails (id, repoName, createdAt, repoUrl, description, tag, repoWatchStatus) VALUES (
-                                       ${repository["id"]}, ${repository["name"]}, ${repository["created_at"]}, ${repository["html_url"]}, ${repository["description"]}, ${tag}, ${repoWatchStatus});`);
+    _ = check databaseClient->execute(`INSERT IGNORE INTO BasicRepoDetails (id, repoName, createdAt, repoUrl, description, tag, repoFavStatus) VALUES (
+                                       ${repository["id"]}, ${repository["name"]}, ${repository["created_at"]}, ${repository["html_url"]}, ${repository["description"]}, ${tag}, ${repoFavStatus});`);
 
 }
 
-public function insertTableDataFromFullRepository(mysql:Client databaseClient, github:FullRepository repository, string orgName, int repoWatchStatus, int monitorStatus, string tag) returns error? {
+public function insertTableDataFromFullRepository(mysql:Client databaseClient, github:FullRepository repository, string orgName, int repoFavStatus, int monitorStatus, string tag) returns error? {
 
-    _ = check databaseClient->execute(`INSERT INTO BasicRepoDetails (id, repoName, createdAt, repoUrl, description, tag, repoWatchStatus) VALUES (
-                                       ${repository["id"]}, ${repository["name"]}, ${repository["created_at"]}, ${repository["html_url"]}, ${repository["description"]}, ${tag}, ${repoWatchStatus});`);
+    _ = check databaseClient->execute(`INSERT IGNORE INTO BasicRepoDetails (id, repoName, createdAt, repoUrl, description, tag, repoFavStatus) VALUES (
+                                       ${repository["id"]}, ${repository["name"]}, ${repository["created_at"]}, ${repository["html_url"]}, ${repository["description"]}, ${tag}, ${repoFavStatus});`);
 
 }
