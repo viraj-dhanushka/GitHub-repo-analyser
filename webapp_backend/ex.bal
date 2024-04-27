@@ -246,7 +246,7 @@
 //         };
 //         return response;
 //     }
-//     resource function get getWatchingRepos/[string orgId]/[string tagName]() returns http:Ok|error {
+//     resource function get getFavouriteRepos/[string orgId]/[string tagName]() returns http:Ok|error {
 //         log:printInfo("Query1 - Select all from the repos where status is 1");
 //         json[] repoInfoList = check quaryDB(databaseId, basicRepoDetailsContainerId, orgId, 1, tagName);
 //         http:Ok response = {
@@ -255,7 +255,7 @@
 //         };
 //         return response;
 //     }
-//     resource function get getNonWatchingRepos/[string orgId]/[string tagName]() returns http:Ok|error {
+//     resource function get getNonFavouriteRepos/[string orgId]/[string tagName]() returns http:Ok|error {
 //         log:printInfo("Query1 - Select all from the repos where status is 0");
 //         json[] repoInfoList = check quaryDB(databaseId, basicRepoDetailsContainerId, orgId, 0, tagName);
 //         http:Ok response = {
@@ -283,7 +283,7 @@
 //             orgId: repoDetails.orgId,
 //             repoName: repoDetails.repoName,
 //             tag: repoDetails.tag,
-//             repoWatchStatus: repoDetails.repoWatchStatus
+//             repoFavStatus: repoDetails.repoFavStatus
 //         };
 //         cosmosdb:DocumentResponse result = check azureCosmosClient->replaceDocument(databaseId, basicRepoDetailsContainerId,
 //     repoDetails.id, documentBody, repoDetails.orgId);
@@ -303,7 +303,7 @@
 //             orgId: repoDetails.orgId,
 //             repoName: repoDetails.repoName,
 //             tag: repoDetails.tag,
-//             repoWatchStatus: repoDetails.repoWatchStatus
+//             repoFavStatus: repoDetails.repoFavStatus
 //         };
 //         cosmosdb:DocumentResponse result = check azureCosmosClient->replaceDocument(databaseId, basicRepoDetailsContainerId,
 //     repoDetails.id, documentBody, repoDetails.orgId);
@@ -502,8 +502,8 @@
 //         }
 //     }
 // }
-// public function getWatchingReposWithId(string databaseId, string repoContainerId, string partitionKeyValue, int repoState) returns string[]|error {
-//     string selectAllQuery = string `SELECT * FROM ${repoContainerId.toString()} f WHERE f.repoWatchStatus = ${repoState}`;
+// public function getFavouriteReposWithId(string databaseId, string repoContainerId, string partitionKeyValue, int repoState) returns string[]|error {
+//     string selectAllQuery = string `SELECT * FROM ${repoContainerId.toString()} f WHERE f.repoFavStatus = ${repoState}`;
 //     cosmosdb:QueryOptions options = {partitionKey: partitionKeyValue};
 //     stream<record {}, error?> result = check azureCosmosClient->queryDocuments(databaseId, repoContainerId,
 //         selectAllQuery, options);
@@ -522,12 +522,12 @@
 //     boolean deletedTagsWithoutIssue = true;
 //     check result.forEach(function(record {} repo) {
 //         int repoMonitorStatus = repo["monitorStatus"].toString() == "1" ? 1 : 0;
-//         int repoWatchStatus = repo["repoWatchStatus"].toString() == "1" ? 1 : 0;
+//         int repoFavStatus = repo["repoFavStatus"].toString() == "1" ? 1 : 0;
 //         map<json> documentBody = {
 //                 createdAt: repo["createdAt"].toString(),
 //                 monitorStatus: repoMonitorStatus,
 //                 orgId: partitionKeyValue,
-//                 repoWatchStatus: repoWatchStatus,
+//                 repoFavStatus: repoFavStatus,
 //                 repoName: repo["repoName"].toString(),
 //                 tag: DEFAULT_TAG
 //             };
@@ -552,7 +552,7 @@
 //                 id: repo["id"].toString(),
 //                 createdAt: repo["createdAt"].toString(),
 //                 monitorStatus: repo["monitorStatus"].toString(),
-//                 repoWatchStatus: repo["repoWatchStatus"].toString(),
+//                 repoFavStatus: repo["repoFavStatus"].toString(),
 //                 repoName: repo["repoName"].toString(),
 //                 tag: repo["tag"].toString()
 //             };
@@ -562,7 +562,7 @@
 //     return repoInfoList;
 // }
 // public function quaryDB(string databaseId, string basicRepoDetailsContainerId, string partitionKeyValue, int repoState, string tagName) returns json[]|error {
-//     string selectAllQuery = string `SELECT * FROM ${basicRepoDetailsContainerId} f WHERE f.repoWatchStatus = ${repoState} AND f.tag = "${tagName}"`;
+//     string selectAllQuery = string `SELECT * FROM ${basicRepoDetailsContainerId} f WHERE f.repoFavStatus = ${repoState} AND f.tag = "${tagName}"`;
 //     cosmosdb:QueryOptions options = {partitionKey: partitionKeyValue};
 //     stream<record {}, error?> result = check azureCosmosClient->queryDocuments(databaseId, basicRepoDetailsContainerId,
 //         selectAllQuery, options);
@@ -571,7 +571,7 @@
 //         json repoBasicInfo = {
 //                 id: queryResult["id"].toString(),
 //                 createdAt: queryResult["createdAt"].toString(),
-//                 repoWatchStatus: queryResult["repoWatchStatus"].toString(),  // TODO: try returning int
+//                 repoFavStatus: queryResult["repoFavStatus"].toString(),  // TODO: try returning int
 //                 monitorStatus: queryResult["monitorStatus"].toString(),  // TODO: try returning int
 //                 repoName: queryResult["repoName"].toString(),
 //                 tag: queryResult["tag"].toString()
@@ -614,13 +614,13 @@
 //                 };
 //     return newDocumentBody;
 // }
-// public function createDocumentFromRepoBasicDetails(github:Repository repository, string orgId, int repoWatchStatus, int monitorStatus, string tag) returns map<json> {
+// public function createDocumentFromRepoBasicDetails(github:Repository repository, string orgId, int repoFavStatus, int monitorStatus, string tag) returns map<json> {
 //     map<json> newDocumentBody = {
 //                     createdAt: repository["createdAt"].toString(),
 //                     monitorStatus: monitorStatus,
 //                     orgId: orgId,
 //                     repoName: repository["name"].toString(),
-//                     repoWatchStatus: repoWatchStatus,
+//                     repoFavStatus: repoFavStatus,
 //                     tag: tag
 //                 };
 //     return newDocumentBody;
@@ -643,7 +643,7 @@
 //     int monitorStatus;
 //     string orgId;
 //     string repoName;
-//     int repoWatchStatus;
+//     int repoFavStatus;
 //     string tag;
 // };
 // public type RepoUpdateInfo record {
