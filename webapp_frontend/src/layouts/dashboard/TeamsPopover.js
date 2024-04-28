@@ -49,7 +49,7 @@ function stringAvatar(name) {
 }
 
 export default function TeamsPopover() {
-  const { getAccessToken } = useAuthContext();
+  const { getAccessToken, refreshAccessToken } = useAuthContext();
   const [currentTag, setCurrentTag] = useState(DEFAULT_TAG);
   const [deleteTagName, setDeleteTagName] = useState('');
 
@@ -60,29 +60,47 @@ export default function TeamsPopover() {
   const anchorRef = useRef(null);
 
   async function getTagsList() {
+
     const token = await getAccessToken();
-    const axiosInstance = axios.create({
-      baseURL: API_BASE_URL,
-      // TODO: uncomment this and configure
+    // const axiosInstance = axios.create({
+    //   baseURL: API_BASE_URL,
+    //   // TODO: uncomment this and configure
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // });
+    // axiosInstance
+    //   .get(`/getTagsList`)
+    //   .then((getData) => {
+    //     console.log('TagList : ', getData.data);
+    //     setApiData(getData.data);
+    //   })
+    //   .catch((error) => {
+    //     if (error.response.status === 401) {
+    //       console.log('Error Tag : ', error.response);
+    //       // window.location.reload(false); // reload the page
+    //     }
+    //   });
+    
+    fetch(`${window.config.todoApiUrl}/getTagsList`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-      },
-    });
-    axiosInstance
-      .get(`/getTagsList`)
-      .then((getData) => {
-        console.log('TagList : ', getData.data);
-        setApiData(getData.data);
-      })
-      .catch((error) => {
-        if (error.response.status === 401) {
-          console.log('Error Tag : ', error.response);
-          // window.location.reload(false); // reload the page
+      }
+    }).then((response) => {
+      if (response.status >= 400) {
+        if (response.status === 401) {
+          refreshAccessToken();
         }
-      });
-    
-
+        return response.json().then((data) => {
+          throw new Error(`Error fetching data from graphql: ${JSON.stringify(data)}`);
+        });
+      } else {
+        return response.json();
+      }
+    }).then((data) => setApiData(data.data));
 
   }
 
