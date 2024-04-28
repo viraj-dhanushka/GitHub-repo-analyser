@@ -97,9 +97,8 @@ export default function TeamsPopover() {
         return response.json().then((data) => {
           throw new Error(`Error fetching data from graphql: ${JSON.stringify(data)}`);
         });
-      } else {
-        return response.json();
-      }
+      } 
+      return response.json();
     }).then((data) => setApiData(data.data));
 
   }
