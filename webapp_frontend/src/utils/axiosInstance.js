@@ -11,10 +11,10 @@ export default function axiosClient() {
     // baseURL: "http://localhost:9090/analyse",
     baseURL: API_BASE_URL,
     // TODO: uncomment this and configure
-    // headers: {
-    //   "Content-Type": "application/json",
-    //   Authorization: `Bearer ${token}`,
-    // },
+    headers: {
+      "Content-Type": "application/json",
+      // Authorization: `Bearer ${token}`,
+    },
   });
   return axiosInstance;
 
