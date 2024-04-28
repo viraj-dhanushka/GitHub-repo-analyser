@@ -87,7 +87,7 @@ export default function TeamsPopover() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Basic ${token}`,
+        Authorization: `Bearer ${token}`,
       }
     }).then((response) => {
       if (response.status >= 400) {
