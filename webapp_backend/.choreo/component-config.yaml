@@ -22,14 +22,14 @@ spec:
       schemaFilePath: openapi.yaml
   outbound:
     serviceReferences:
-    - name: 
-      connectionConfig: 
+    - name: choreo:///esle/githubrepoanalyser/tmqhgb/ad72e/v1.0/ORGANIZATION
+      connectionConfig: 01ef04fb-2113-1738-9011-f2e5a92ed5bf
       env:
       - from: ServiceURL
-        to: APPOINTMENT_SERVICE_URL
+        to: GITHUB_SERVICE_API_URL
       - from: ConsumerKey
-        to: APPOINTMENTS_OAUTH_CLIENT_ID
+        to: GITHUB_SERVICE_OAUTH_CLIENT_ID
       - from: ConsumerSecret
-        to: APPOINTMENTS_OAUTH_CLIENT_SECRET
+        to: GITHUB_SERVICE_OAUTH_CLIENT_SECRET
       - from: TokenURL
-        to: APPOINTMENTS_OAUTH_TOKEN_URL
+        to: GITHUB_SERVICE_OAUTH_TOKEN_URL

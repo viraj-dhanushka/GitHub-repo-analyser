@@ -3,9 +3,17 @@ import ballerina/http;
 // import ballerina/log;
 
 configurable string GITHUB_SERVICE_API_URL = ?;
+configurable string GITHUB_SERVICE_OAUTH_CLIENT_ID = ?;
+configurable string GITHUB_SERVICE_OAUTH_CLIENT_SECRET = ?;
+configurable string GITHUB_SERVICE_OAUTH_TOKEN_URL = ?;
 
-http:Client ghAnalyserApiEndpoint = check new (GITHUB_SERVICE_API_URL);
-
+    http:Client ghAnalyserApiEndpoint = check new (GITHUB_SERVICE_API_URL,
+        auth = {
+            tokenUrl: GITHUB_SERVICE_OAUTH_TOKEN_URL,
+            clientId: GITHUB_SERVICE_OAUTH_CLIENT_ID,
+            clientSecret: GITHUB_SERVICE_OAUTH_CLIENT_SECRET
+        }
+    );
 map<string|string[]> headers = {
     "Access-Control-Allow-Headers": "authorization,Access-Control-Allow-Origin,Content-Type,SOAPAction,Authorization,jwt,API-Key",
     "Access-Control-Allow-Origin": "*",
