@@ -62,7 +62,6 @@ export default function TeamsPopover() {
   async function getTagsList() {
     const token = await getAccessToken();
     const axiosInstance = axios.create({
-      // baseURL: "http://localhost:9090/analyse",
       baseURL: API_BASE_URL,
       // TODO: uncomment this and configure
       headers: {
