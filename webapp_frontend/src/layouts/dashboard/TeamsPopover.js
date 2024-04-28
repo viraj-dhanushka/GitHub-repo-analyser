@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 
 import { useAuthContext } from '@asgardeo/auth-react';
+import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { Box, Button, MenuItem, ListItemText, IconButton } from '@mui/material';
 import * as React from 'react';
