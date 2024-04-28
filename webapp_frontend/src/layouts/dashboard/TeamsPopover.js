@@ -83,7 +83,7 @@ export default function TeamsPopover() {
     //     }
     //   });
     
-    fetch(`${window.config.todoApiUrl}/getTagsList`, {
+    fetch(`${API_BASE_URL}/getTagsList`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -98,7 +98,7 @@ export default function TeamsPopover() {
         //   throw new Error(`Error fetching data from graphql: ${JSON.stringify(data)}`);
         // });
       } 
-      console.log('Error Tag : ', response);
+      console.log('Response : ', response);
     }).then((data) => setApiData(data.data));
 
   }
