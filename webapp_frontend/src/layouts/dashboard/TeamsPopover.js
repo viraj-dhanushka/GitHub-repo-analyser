@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-
+import { useAuthContext } from '@asgardeo/auth-react';
 import { useEffect, useRef, useState } from 'react';
 import { Box, Button, MenuItem, ListItemText, IconButton } from '@mui/material';
 import * as React from 'react';
@@ -16,6 +16,7 @@ import axiosClient from '../../utils/axiosInstance';
 // ----------------------------------------------------------------------
 
 const DEFAULT_TAG = window.config.REACT_APP_DEFAULT_TAG;
+const API_BASE_URL = window.config.REACT_APP_BASE_URL;
 
 function stringToColor(string) {
   let hash = 0;
@@ -47,6 +48,7 @@ function stringAvatar(name) {
 }
 
 export default function TeamsPopover() {
+  const { getAccessToken } = useAuthContext();
   const [currentTag, setCurrentTag] = useState(DEFAULT_TAG);
   const [deleteTagName, setDeleteTagName] = useState('');
 
@@ -57,7 +59,17 @@ export default function TeamsPopover() {
   const anchorRef = useRef(null);
 
   async function getTagsList() {
-    axiosClient()
+    const token = await getAccessToken();
+    const axiosInstance = axios.create({
+      // baseURL: "http://localhost:9090/analyse",
+      baseURL: API_BASE_URL,
+      // TODO: uncomment this and configure
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    axiosInstance
       .get(`/getTagsList`)
       .then((getData) => {
         console.log('TagList : ', getData.data);
@@ -69,6 +81,9 @@ export default function TeamsPopover() {
           // window.location.reload(false); // reload the page
         }
       });
+    
+
+
   }
 
   useEffect(() => {
