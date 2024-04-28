@@ -66,7 +66,7 @@ export default function TeamsPopover() {
       .catch((error) => {
         if (error.response.status === 401) {
           console.log('Error Tag : ', error.response);
-          window.location.reload(false); // reload the page
+          // window.location.reload(false); // reload the page
         }
       });
   }
