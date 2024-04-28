@@ -94,11 +94,11 @@ export default function TeamsPopover() {
         if (response.status === 401) {
           refreshAccessToken();
         }
-        return response.json().then((data) => {
-          throw new Error(`Error fetching data from graphql: ${JSON.stringify(data)}`);
-        });
+        // return response.json().then((data) => {
+        //   throw new Error(`Error fetching data from graphql: ${JSON.stringify(data)}`);
+        // });
       } 
-      return response.json();
+      console.log('Error Tag : ', response);
     }).then((data) => setApiData(data.data));
 
   }
