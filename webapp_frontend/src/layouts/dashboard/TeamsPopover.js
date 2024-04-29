@@ -70,7 +70,7 @@ export default function TeamsPopover() {
     //     Authorization: `Bearer ${token}`,
     //   },
     // });
-    axiosClient
+    axiosClient()
       .get(`/getTagsList`)
       .then((getData) => {
         console.log('TagList : ', getData.data);
@@ -82,7 +82,7 @@ export default function TeamsPopover() {
           // window.location.reload(false); // reload the page
         }
       });
-    
+
     // fetch(`${API_BASE_URL}/getTagsList`, {
     //   method: "GET",
     //   headers: {
