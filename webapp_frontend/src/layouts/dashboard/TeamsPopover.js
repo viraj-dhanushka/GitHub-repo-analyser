@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 
-import { useAuthContext } from '@asgardeo/auth-react';
-import axios from 'axios';
+// import { useAuthContext } from '@asgardeo/auth-react';
+// import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { Box, Button, MenuItem, ListItemText, IconButton } from '@mui/material';
 import * as React from 'react';
@@ -49,7 +49,7 @@ function stringAvatar(name) {
 }
 
 export default function TeamsPopover() {
-  const { getAccessToken, refreshAccessToken } = useAuthContext();
+  // const { getAccessToken, refreshAccessToken } = useAuthContext();
   const [currentTag, setCurrentTag] = useState(DEFAULT_TAG);
   const [deleteTagName, setDeleteTagName] = useState('');
 
@@ -61,16 +61,16 @@ export default function TeamsPopover() {
 
   async function getTagsList() {
 
-    const token = await getAccessToken();
-    const axiosInstance = axios.create({
-      baseURL: API_BASE_URL,
-      // TODO: uncomment this and configure
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    axiosInstance
+    // const token = await getAccessToken();
+    // const axiosInstance = axios.create({
+    //   baseURL: API_BASE_URL,
+    //   // TODO: uncomment this and configure
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // });
+    axiosClient
       .get(`/getTagsList`)
       .then((getData) => {
         console.log('TagList : ', getData.data);
