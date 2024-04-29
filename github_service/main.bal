@@ -37,7 +37,7 @@ type RepoItem record {|
 |};
 
 type TagItem record {|
-    int id?;
+    string id;
     string name;
 |};
 
