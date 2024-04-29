@@ -59,12 +59,12 @@ service /ghanalyse on new http:Listener(9000) {
                                          )`);
 
         _ = check self.databaseClient->execute(`CREATE TABLE IF NOT EXISTS Tags (
-                                            id INT AUTO_INCREMENT,
+                                            id VARCHAR(255),
                                             name VARCHAR(255), 
                                             PRIMARY KEY (id)
                                             )`);
 
-        _ = check self.databaseClient->execute(`INSERT IGNORE INTO Tags (id, name) VALUES (1, ${DEFAULT_TAG});`);
+        _ = check self.databaseClient->execute(`INSERT IGNORE INTO Tags (id, name) VALUES (${DEFAULT_TAG.toLowerAscii()}, ${DEFAULT_TAG});`);
 
     }
 
@@ -138,7 +138,7 @@ service /ghanalyse on new http:Listener(9000) {
     }
     resource function post addTag/[string tagName]() returns http:Ok|error? {
 
-        _ = check self.databaseClient->execute(`INSERT IGNORE INTO Tags (name) VALUES (${tagName});`);
+        _ = check self.databaseClient->execute(`INSERT IGNORE INTO Tags (id, name) VALUES (${tagName.toLowerAscii()}, ${tagName});`);
         http:Ok response = {
             body: {
                 "success": true,
