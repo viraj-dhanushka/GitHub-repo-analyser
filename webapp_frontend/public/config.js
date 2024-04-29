@@ -6,7 +6,7 @@ window.config = {
     auth: {
       signInRedirectURL: "https://95976c15-5127-4fdc-844b-728537425044.e1-us-east-azure.choreoapps.dev",
       signOutRedirectURL: "https://95976c15-5127-4fdc-844b-728537425044.e1-us-east-azure.choreoapps.dev",
-      clientID: "S2t8VcbNlfLvDNbevUFfnJZAe5sa",
+      clientID: "Kb4gif90V633a6dkzXsEcDPJvQ8a",
       baseUrl: "https://api.asgardeo.io/t/esle",
       scope: [ "openid","profile" ]
     },
