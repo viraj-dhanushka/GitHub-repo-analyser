@@ -56,7 +56,7 @@ export default function RepoMoreMenu(props) {
         .catch((error) => {
           console.log(error);
           if (error.response.status === 401) {
-            window.location.reload(false); 
+            window.location.reload(false);
           } else {
             sendDataToAPI(
               props.id,
