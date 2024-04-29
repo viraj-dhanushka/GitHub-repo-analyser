@@ -62,44 +62,44 @@ export default function TeamsPopover() {
   async function getTagsList() {
 
     const token = await getAccessToken();
-    // const axiosInstance = axios.create({
-    //   baseURL: API_BASE_URL,
-    //   // TODO: uncomment this and configure
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // });
-    // axiosInstance
-    //   .get(`/getTagsList`)
-    //   .then((getData) => {
-    //     console.log('TagList : ', getData.data);
-    //     setApiData(getData.data);
-    //   })
-    //   .catch((error) => {
-    //     if (error.response.status === 401) {
-    //       console.log('Error Tag : ', error.response);
-    //       // window.location.reload(false); // reload the page
-    //     }
-    //   });
-    
-    fetch(`${API_BASE_URL}/getTagsList`, {
-      method: "GET",
+    const axiosInstance = axios.create({
+      baseURL: API_BASE_URL,
+      // TODO: uncomment this and configure
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-      }
-    }).then((response) => {
-      if (response.status >= 400) {
-        if (response.status === 401) {
-          refreshAccessToken();
+      },
+    });
+    axiosInstance
+      .get(`/getTagsList`)
+      .then((getData) => {
+        console.log('TagList : ', getData.data);
+        setApiData(getData.data);
+      })
+      .catch((error) => {
+        if (error.response.status === 401) {
+          console.log('Error Tag : ', error.response);
+          // window.location.reload(false); // reload the page
         }
-        // return response.json().then((data) => {
-        //   throw new Error(`Error fetching data from graphql: ${JSON.stringify(data)}`);
-        // });
-      } 
-      console.log('Response : ', response);
-    }).then((data) => setApiData(data.data));
+      });
+    
+    // fetch(`${API_BASE_URL}/getTagsList`, {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${token}`,
+    //   }
+    // }).then((response) => {
+    //   if (response.status >= 400) {
+    //     if (response.status === 401) {
+    //       refreshAccessToken();
+    //     }
+    //     // return response.json().then((data) => {
+    //     //   throw new Error(`Error fetching data from graphql: ${JSON.stringify(data)}`);
+    //     // });
+    //   } 
+    //   console.log('Response : ', response);
+    // }).then((data) => setApiData(data.data));
 
   }
 
