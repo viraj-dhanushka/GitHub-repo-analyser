@@ -55,15 +55,15 @@ export default function RepoMoreMenu(props) {
         })
         .catch((error) => {
           console.log(error);
-          if (error.response.status === 401) {
-            window.location.reload(false); 
-          } else {
-            sendDataToAPI(
-              props.id,
-              props.repoFavStatus === '1' ? 1 : 0,
-              tagName
-            );
-          }
+          // if (error.response.status === 401) {
+          //   window.location.reload(false); 
+          // } else {
+          //   sendDataToAPI(
+          //     props.id,
+          //     props.repoFavStatus === '1' ? 1 : 0,
+          //     tagName
+          //   );
+          // }
         });
       handleClose();
     } else {
