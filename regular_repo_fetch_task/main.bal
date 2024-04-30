@@ -25,8 +25,8 @@ github:Client githubEndpoint = check new (gitHubConfig);
 
 public function main() {
     final mysql:Client|sql:Error databaseClient = new (HOST, USERNAME, PASSWORD, DATABASENAME, PORT);
-
-    github:MinimalRepository[]|error allOrgRepos = githubEndpoint->/orgs/[ORG_NAME]/repos();
+    // Get the newly created 10 repos
+    github:MinimalRepository[]|error allOrgRepos = githubEndpoint->/orgs/[ORG_NAME]/repos(sort = "created",direction = "desc",page = 1, per_page = 10 );
     if (databaseClient is mysql:Client && allOrgRepos is github:MinimalRepository[]) {
         foreach github:MinimalRepository repo in allOrgRepos {
             log:printInfo("Repo is ");
