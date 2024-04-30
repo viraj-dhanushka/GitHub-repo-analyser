@@ -42,9 +42,17 @@ public function main() {
         }
     }
 }
-
 public function insertTableDataFromMinimalRepository(mysql:Client databaseClient, github:MinimalRepository repository, string ORG_NAME, int repoFavStatus, int monitorStatus, string tag) returns string|error? {
-
+    _ =  check databaseClient->execute(`CREATE TABLE IF NOT EXISTS BasicRepoDetails (
+                                           id INT,
+                                           repoName VARCHAR(255), 
+                                           createdAt VARCHAR(255), 
+                                           description VARCHAR(255),       
+                                           repoUrl VARCHAR(255), 
+                                           tag VARCHAR(255), 
+                                           repoFavStatus INT,
+                                           PRIMARY KEY (id)
+                                         )`);
     _ = check databaseClient->execute(`INSERT IGNORE INTO BasicRepoDetails (id, repoName, createdAt, repoUrl, description, tag, repoFavStatus) VALUES (
                                        ${repository["id"]}, ${repository["name"]}, ${repository["created_at"]}, ${repository["html_url"]}, ${repository["description"]}, ${tag}, ${repoFavStatus});`);
     return ("Repo insertion successful");
