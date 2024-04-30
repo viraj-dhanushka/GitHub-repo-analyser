@@ -204,7 +204,7 @@ export default function TeamsPopover() {
               </ListItemText>
               <IconButton
                 aria-label="delete"
-                disabled={option.id === apiData[0].id}
+                disabled={option.id === "not specified"}
                 color="error"
                 onClick={handleDialogOpen({
                   deletingTag: option.name
