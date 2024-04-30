@@ -43,7 +43,7 @@ export default function RepoMoreMenu(props) {
     if (tagName.length >= 2) {
       props.clearApiData();
       props.startSpinner();
-
+      console.log("props.repoFavStatus is : ", props.repoFavStatus);
       axiosClient()
         .post(`/addTag/${tagName}`)
         .then(() => {
@@ -52,6 +52,7 @@ export default function RepoMoreMenu(props) {
             props.repoFavStatus === '1' ? 1 : 0,
             tagName
           );
+          window.location.reload(false);
         })
         .catch((error) => {
           console.log(error);
