@@ -10,8 +10,8 @@ import App from './App';
 // ----------------------------------------------------------------------
 
 const authConfig = {
-  signInRedirectURL: window.config.auth.signInRedirectURL,
-  signOutRedirectURL: window.config.auth.signOutRedirectURL,
+  signInRedirectURL: "http://localhost:3000",
+  signOutRedirectURL: "http://localhost:3000",
   clientID: window.config.auth.clientID,
   baseUrl: window.config.auth.baseUrl,
   scope: ["openid", "profile"],
