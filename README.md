@@ -16,11 +16,11 @@ This is project provide templates for both frontend and backend of the web appli
 - Postman to test the app locally
 
 #### Demo
-- Dashboard
+- Dashboard - 
 <img width="1680" alt="Dashboard" src="https://github.com/viraj-dhanushka/GitHub-repo-analyser/assets/59219626/59c3fa5f-1c71-40e6-9110-f00bb3809d86">
 
-- All Repos
+- All Repos - Template to display all organisation repositories.
 <img width="1680" alt="All Repos" src="https://github.com/viraj-dhanushka/GitHub-repo-analyser/assets/59219626/20d60189-730a-4cbc-b98c-82e29b57a14c">
 
-- Repo Page
+- Repo Page - All the details available and all the available endpoints
 <img width="1680" alt="Repo Page" src="https://github.com/viraj-dhanushka/GitHub-repo-analyser/assets/59219626/acedb997-6298-4e52-bba8-481f1c64e65b">
