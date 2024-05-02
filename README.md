@@ -1,6 +1,6 @@
 ### GitHub-repo-analyser
 
-This is project contains templates for both frontend and backend of the web application which can be used to develop a fully functioning GitHub repository analyser.
+This is project provide templates for both frontend and backend of the web application which can be used to develop a fully functioning repository analyser specially for large organisations with large number of GitHub repositories. 
 
 #### Technonlogies
 - Web app frontend - React, Material UI
