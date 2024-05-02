@@ -1,8 +1,8 @@
-# GitHub-repo-analyser
+### GitHub-repo-analyser
 
 This is project contains templates for both frontend and backend of the web application which can be used to develop a fully functioning GitHub repository analyser.
 
-## Technonlogies
+#### Technonlogies
 - Web app frontend - React, Material UI
 - Web app backend - Ballerina
 - Database - WSO2 Choreo managed MySQL DB
@@ -10,12 +10,12 @@ This is project contains templates for both frontend and backend of the web appl
 - Schedule Tasks - Ballerina
 - IAM - WSO2 Asgardeo
 
-## Tools
+#### Tools
 - WSO2 Choreo to deploy and test the entire web application
 - VS Code to develop the web app locally
 - Postman to test the app locally
 
-## Demo
+#### Demo
 - Dashboard
 <img width="1680" alt="Dashboard" src="https://github.com/viraj-dhanushka/GitHub-repo-analyser/assets/59219626/59c3fa5f-1c71-40e6-9110-f00bb3809d86">
 
